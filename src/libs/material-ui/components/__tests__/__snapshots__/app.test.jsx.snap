@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<App /> renders correctly 1`] = `
+<div
+  className="pusher"
+>
+  <TransactionSigningOverlay />
+  <HashRouter>
+    <MenuSystem
+      className="content"
+      dropdown={false}
+      hidden={false}
+      marginTop="5em"
+      menuProps={
+        Object {
+          "borderless": true,
+          "fixed": "top",
+        }
+      }
+      parentRoute="/"
+      renderLastItem={[Function]}
+      tabs={
+        Array [
+          Object {
+            "component": [Function],
+            "icon": "key",
+            "name": "Keystores",
+            "path": "/keystores",
+          },
+          Object {
+            "component": [Function],
+            "icon": "wrench",
+            "name": "Config",
+            "path": "/config",
+          },
+        ]
+      }
+      usingRouter={true}
+    />
+  </HashRouter>
+  <Footer />
+</div>
+`;

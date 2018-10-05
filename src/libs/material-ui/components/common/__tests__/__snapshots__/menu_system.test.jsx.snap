@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MenuSystem /> renders correctly 1`] = `
+<div>
+  <Menu>
+    <Container>
+      <MenuItem
+        active={true}
+        content="Tab 1"
+        exact={true}
+        icon="tabIcon1"
+        key="/tab-1"
+        onClick={[Function]}
+      />
+      <MenuItem
+        active={false}
+        content="Tab 2"
+        exact={true}
+        icon="tabIcon2"
+        key="/tab-2"
+        onClick={[Function]}
+      />
+    </Container>
+  </Menu>
+  <Container
+    style={
+      Object {
+        "marginTop": "1.5em",
+      }
+    }
+  />
+</div>
+`;

@@ -1,0 +1,44 @@
+{
+  "presets": [
+    "env",
+    "react",
+    "stage-2",
+    "stage-0"
+  ],
+  "compact" : false,
+  "plugins": [
+    "transform-class-properties",
+    ["babel-root-import", { "rootPathSuffix": "src" }],
+    "react-hot-loader/babel",
+    "transform-object-rest-spread"
+  ],
+  "env": {
+    "production": {
+      "plugins": "transform-class-properties",
+      "presets": [
+        "react-optimize",
+        ["env", {
+          "targets": {
+            "uglify": false,
+            "browsers": [
+              "last 2 versions",
+              "safari >= 8",
+              "ie >= 10",
+              "ios >= 8"
+            ]
+          },
+          "loose": true,
+          "useBuiltIns": true
+          }]
+      ]
+    },
+    "test": {
+      "presets": ["env"],
+      "plugins": [
+        "transform-class-properties",
+        ["babel-root-import", { "rootPathSuffix": "src" }],
+        "transform-object-rest-spread"
+      ]
+    }
+  }
+}

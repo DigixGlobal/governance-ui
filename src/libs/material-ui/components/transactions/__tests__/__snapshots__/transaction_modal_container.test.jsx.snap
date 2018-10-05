@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<TransactionModalContainer /> renders correctly 1`] = `
+<EZModal
+  closeButtonText="test close button text"
+  closeOnDimmerClick={true}
+  content={[Function]}
+  data={Object {}}
+  error="test error"
+  handleSubmit={[Function]}
+  header="test header"
+  initiallyOpen={true}
+  loading={false}
+  noSubmitButton={false}
+  trigger={<div />}
+/>
+`;

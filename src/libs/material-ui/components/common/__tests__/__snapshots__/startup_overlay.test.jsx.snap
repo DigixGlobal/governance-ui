@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<StartupOverlay /> renders correctly 1`] = `
+<div>
+  <Label
+    color="purple"
+    content="Beware of phishing! Always check the URL!"
+    icon="warning sign"
+    pointing={true}
+    style={
+      Object {
+        "left": 10,
+        "maxWidth": "100%",
+        "position": "fixed",
+        "top": 0,
+        "zIndex": 1002,
+      }
+    }
+  />
+  <EZModal
+    actions={[Function]}
+    closeOnDimmerClick={false}
+    content={
+      <div
+        style={
+          Object {
+            "background": "rgba(0,0,0,.05)",
+            "maxHeight": "50vh",
+            "overflowY": "scroll",
+            "padding": "1em",
+          }
+        }
+      >
+        <p>
+          TODO: Default TOS
+        </p>
+      </div>
+    }
+    header="Spectrum"
+    initiallyOpen={true}
+    onClose={[Function]}
+  />
+</div>
+`;

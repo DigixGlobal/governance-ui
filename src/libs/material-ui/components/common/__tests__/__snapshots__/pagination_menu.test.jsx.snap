@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<PaginationMenu /> renders correctly 1`] = `
+<Menu
+  pagination={true}
+  size="small"
+>
+  <MenuItem
+    as="a"
+    name="fast backward"
+    onClick={[Function]}
+  >
+    <Icon
+      as="i"
+      name="fast backward"
+    />
+  </MenuItem>
+  <MenuItem
+    as="a"
+    name="warpback"
+    onClick={[Function]}
+  >
+    <Icon
+      as="i"
+      name="step backward"
+    />
+  </MenuItem>
+  <MenuItem
+    content="10 - 20 / 50"
+  />
+  <MenuItem
+    as="a"
+    name="forward"
+    onClick={[Function]}
+  >
+    <Icon
+      as="i"
+      name="step forward"
+    />
+  </MenuItem>
+  <MenuItem
+    as="a"
+    name="warpfroward"
+    onClick={[Function]}
+  >
+    <Icon
+      as="i"
+      name="fast forward"
+    />
+  </MenuItem>
+</Menu>
+`;
