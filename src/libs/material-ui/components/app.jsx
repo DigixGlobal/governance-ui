@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { HashRouter, Switch, Route, Redirect } from 'react-router-dom';
 
-// import BottomNavigation from '@material-ui/core/BottomNavigation';
-// import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 // import { version } from '~/../package.json';
 
-// import '@digix/mui/lib/assets/css/main.css';
+import GovernanceUi from '@digix/governance-ui-components/src/pages';
 
 import TransactionSigningOverlay from './transactions/transaction_signing_overlay';
 
@@ -25,29 +24,26 @@ export default class App extends Component {
     const { theme } = this.props;
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <div>
-          <TransactionSigningOverlay />
-          {/* <StartupOverlay content={() => <h1>Hi</h1>} /> */}
-          <MenuSystem
-            // renderLastItem={() => <ConnectionStatus />}
-            tabs={[{ name: 'Keystores', icon: 'settings', component: <Keystores /> }]}
-          />
-          {/* <div className="root">
-            <BottomNavigation position="static">
-              <BottomNavigationAction label="test" />
-            </BottomNavigation>
-          </div> */}
-        </div>
-      </MuiThemeProvider>
+      // <MuiThemeProvider theme={theme}>
+      <div>
+        <TransactionSigningOverlay />
+        <HashRouter>
+          {/* <ScrollToTopRouter> */}
+          <Switch>
+            <Route path="/" component={GovernanceUi} />
+          </Switch>
+          {/* </ScrollToTopRouter> */}
+        </HashRouter>
+      </div>
+      // </MuiThemeProvider>
     );
   }
 }
 
 App.propTypes = {
-  theme: PropTypes.object,
+  theme: PropTypes.object
 };
 
 App.defaultProps = {
-  theme: undefined,
+  theme: undefined
 };

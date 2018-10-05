@@ -45,6 +45,10 @@ const baseConfig = {
         loader: 'url-loader?limit=64000&mimetype=application/octet-stream',
       },
       {
+        test: /\.(ttf|otf)$/,
+        loader: "file-loader"
+      },
+      {
         test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         loader: 'url-loader?limit=64000&mimetype=application/fontwoff',
       },
@@ -78,6 +82,7 @@ const baseConfig = {
           // TODO replace with dapplet system
           path.resolve('./src'),
           fs.realpathSync(`${__dirname}/node_modules/web3-redux`),
+          fs.realpathSync(`${__dirname}/node_modules/@digix/governance-ui-components`),
           fs.realpathSync(`${__dirname}/node_modules/ethereumjs-tx`),
           fs.realpathSync(`${__dirname}/node_modules/web3-provider-engine`),
           fs.realpathSync(`${__dirname}/node_modules/@digix/sui-react-ezmodal`),
@@ -91,6 +96,9 @@ const baseConfig = {
         ].concat(production ? [fs.realpathSync(`${__dirname}/node_modules/awaiting`)] : []),
         use: ['cache-loader', 'babel-loader'],
       },
+    //   {test: /\.(js|jsx)$/ , loader:'babel-loader', exclude: '/node_modules/',query: {
+    //     presets: ['es2015', 'react','stage-2']
+    // }},
     ],
   },
   plugins: [

@@ -3,8 +3,7 @@ import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 
-import 'semantic-ui-less/semantic.less';
-// import '@fortawesome/fontawesome-free/css/all.css';
+import '@digix/governance-ui-components/src/global-styles';
 
 import './helpers/offlinePlugin';
 import uiMapper from './helpers/uiMapper';
@@ -26,7 +25,7 @@ const renderApp = () => {
         <NewApp theme={uiLibrary.theme} />
       </Provider>
     </AppContainer>,
-    document.getElementById('app'),
+    document.getElementById('app')
   );
 };
 
