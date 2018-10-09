@@ -10,7 +10,7 @@ import { CardContent, CardHeader } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import SettingsIcon from '@material-ui/icons/settings';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import { createKeystore, updateKeystore, deleteKeystore } from '~/actions/keystore';
 import { updateSession } from '~/actions/session';
@@ -90,42 +90,6 @@ class Keystores extends Component {
   }
   renderKeystores() {
     return this.props.keystores.map(keystore => (
-      // <Segment key={keystore.id}>
-      //   <Label ribbon basic color={keystore.type.color}>
-      //     <Icon className={keystore.type.icon} />
-      //     {keystore.type.name}
-      //   </Label>
-      //   <KeystoreModal
-      //     {...this.props}
-      //     header={`Edit Keystore: ${keystore.type.name}`}
-      //     submitFunc={this.props.updateKeystore}
-      //     removeFunc={this.props.deleteKeystore}
-      //     data={keystore}
-      //     form={KeystoreEditForm}
-      //     trigger={
-      //       <Label attached="top right" color="blue" style={{ cursor: 'pointer' }}>
-      //         <Icon name="settings" /> Account Settings
-      //       </Label>
-      //     }
-      //   />
-      //   <Header size="tiny" disabled as="span">
-      //     {keystore.type.subtitle}
-      //   </Header>
-      //   <Table basic="very">
-      //     <Table.Body>
-      //       {keystore.addresses.map(address => (
-      //         <Address
-      //           onChange={() => this.handleChange(address)}
-      //           {...this.props}
-      //           key={address.address}
-      //           keystore={keystore}
-      //           address={address}
-      //           disabled={this.props.keystores.length === 1}
-      //         />
-      //       ))}
-      //     </Table.Body>
-      //   </Table>
-      // </Segment>
       <Card>
         <CardHeader
           title={keystore.type.name}
