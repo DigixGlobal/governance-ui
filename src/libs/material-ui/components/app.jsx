@@ -10,10 +10,11 @@ import GovUiComponents from '@digix/governance-ui-components/src/ui';
 
 import TransactionSigningOverlay from './transactions/transaction_signing_overlay';
 
-import MenuSystem from './common/menu_system';
+// import MenuSystem from './common/menu_system';
 
 import Keystores from './keystores';
 
+import Theme from '../../../themes/material-ui/digix';
 export default class App extends Component {
   componentWillMount() {
     const { Typekit } = window;
@@ -22,23 +23,21 @@ export default class App extends Component {
     }
   }
   render() {
-    const { theme } = this.props;
-
     return (
-      // <MuiThemeProvider theme={theme}>
-      <div>
-        <TransactionSigningOverlay />
-        <HashRouter>
-          {/* <ScrollToTopRouter> */}
-          <Switch>
-            <Route path="/ui" component={GovUiComponents} />
-            <Route path="/keystores" component={Keystores} />
-            <Route path="/" component={GovernanceUi} />
-          </Switch>
-          {/* </ScrollToTopRouter> */}
-        </HashRouter>
-      </div>
-      // </MuiThemeProvider>
+      <MuiThemeProvider theme={Theme}>
+        <div>
+          <TransactionSigningOverlay />
+          <HashRouter>
+            {/* <ScrollToTopRouter> */}
+            <Switch>
+              <Route path="/ui" component={GovUiComponents} />
+              <Route path="/keystores" component={Keystores} />
+              <Route path="/" component={GovernanceUi} />
+            </Switch>
+            {/* </ScrollToTopRouter> */}
+          </HashRouter>
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
