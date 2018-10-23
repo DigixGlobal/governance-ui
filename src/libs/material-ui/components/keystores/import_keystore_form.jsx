@@ -16,11 +16,11 @@ import { getFileContents } from '~/helpers/fileUtils';
 const styles = theme => ({
   container: {
     display: 'flex',
-    flexWrap: 'wrap',
+    flexWrap: 'wrap'
   },
   formControl: {
     margin: theme.spacing.unit,
-    width: '96%',
+    width: '96%'
   },
   dropZone: {
     width: 500,
@@ -34,17 +34,17 @@ const styles = theme => ({
     fontFamily: 'futura-pt,"Futura PT",Roboto,Arial,sans-serif',
     fontSize: '1.2em',
     color: theme.palette.primary.main,
-    cursor: 'pointer',
+    cursor: 'pointer'
   },
   padded: {
     margin: 0,
     textAlign: 'center',
     paddingTop: '1rem',
-    paddingBottom: '1rem',
+    paddingBottom: '1rem'
   },
   address: {
-    fontSize: '23px',
-  },
+    fontSize: '23px'
+  }
 });
 
 class ImportKeystoreForm extends Component {
@@ -52,11 +52,17 @@ class ImportKeystoreForm extends Component {
     setError: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     setLoading: PropTypes.func.isRequired,
-    onGetPrivateKey: PropTypes.func.isRequired,
+    onGetPrivateKey: PropTypes.func.isRequired
   };
   constructor(props) {
     super(props);
-    this.state = { fileContent: null, error: null, password: '', keystore: null, loading: false };
+    this.state = {
+      fileContent: null,
+      error: null,
+      password: '',
+      keystore: null,
+      loading: false
+    };
     this.handleFileDrop = this.handleFileDrop.bind(this);
     this.handleUnlock = this.handleUnlock.bind(this);
     this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
@@ -75,7 +81,10 @@ class ImportKeystoreForm extends Component {
       try {
         const wallet = Wallet.fromV3(fileContent, password, true);
         const privateKey = wallet.getPrivateKey().toString('hex');
-        return onGetPrivateKey({ privateKey, password, name: keystore.name }, this.props);
+        return onGetPrivateKey(
+          { privateKey, password, name: keystore.name },
+          this.props
+        );
       } catch (error) {
         this.props.setError(error);
         this.setState({ error, loading: false });
@@ -91,7 +100,7 @@ class ImportKeystoreForm extends Component {
   handleFileDrop(file) {
     this.props.setError(false);
     getFileContents(file)
-      .then((fileContent) => {
+      .then(fileContent => {
         try {
           const keystore = JSON.parse(fileContent);
           if (keystore.version !== 3) {
@@ -105,9 +114,20 @@ class ImportKeystoreForm extends Component {
       })
       .catch(error => this.props.setError(error));
   }
+  handleKeydown = event => {
+    console.log(event.keyCode);
+    if (event.keyCode === 13) {
+      console.log('unlocking!');
+      this.handleUnlock();
+    }
+  };
+
   renderDropzone() {
     return (
-      <Dropzone className={this.props.classes.dropZone} onDrop={files => this.handleFileDrop(files[0])}>
+      <Dropzone
+        className={this.props.classes.dropZone}
+        onDrop={files => this.handleFileDrop(files[0])}
+      >
         <div className={this.props.classes.padded}>
           <div className="center aligned column">
             <PublishIcon />
@@ -124,49 +144,63 @@ class ImportKeystoreForm extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.container}>
-        <form onSubmit={this.handleUnlock}>
-          <Grid container alignItems="center" alignContent="center" spacing={24}>
-            <Grid item xs={12} md={12}>
-              <Typography align="center" variant="title" className={classes.address}>
-                0x
-                {keystore.address}
+        {/* <form onSubmit={this.handleUnlock}> */}
+        <Grid container alignItems="center" alignContent="center" spacing={24}>
+          <Grid item xs={12} md={12}>
+            <Typography
+              align="center"
+              variant="title"
+              className={classes.address}
+            >
+              0x
+              {keystore.address}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid container alignItems="center" alignContent="center" spacing={24}>
+          <Grid item xs={12} md={12}>
+            <FormControl className={classes.formControl}>
+              <TextField
+                label="Enter Password"
+                id="name-simple"
+                value={password}
+                type="password"
+                error={error}
+                autoFocus
+                onChange={this.handleUpdatePassword}
+                // fullWidth
+                placeholder="Enter Password"
+                helperText="Enter your Password to Unlock your Wallet"
+                inputProps={{
+                  onKeyDown: event => this.handleKeydown(event)
+                }}
+              />
+            </FormControl>
+            {/* <TextField label="Name" placeholder="Address nickname" onChange={this.handleUpdatePassword} fullWidth /> */}
+          </Grid>
+        </Grid>
+        {error && (
+          <Grid
+            container
+            alignItems="center"
+            alignContent="center"
+            spacing={24}
+          >
+            <Grid item xs={4} md={12}>
+              <Typography align="center" color="error">
+                {error.message}
               </Typography>
             </Grid>
           </Grid>
-          <Grid container alignItems="center" alignContent="center" spacing={24}>
-            <Grid item xs={12} md={12}>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  label="Enter Password"
-                  id="name-simple"
-                  value={password}
-                  type="password"
-                  error={error}
-                  autoFocus
-                  onChange={this.handleUpdatePassword}
-                  // fullWidth
-                  placeholder="Enter Password"
-                  helperText="Enter your Password to Unlock your Wallet"
-                />
-              </FormControl>
-              {/* <TextField label="Name" placeholder="Address nickname" onChange={this.handleUpdatePassword} fullWidth /> */}
-            </Grid>
-          </Grid>
-          {error && (
-            <Grid container alignItems="center" alignContent="center" spacing={24}>
-              <Grid item xs={4} md={12}>
-                <Typography align="center" color="error">
-                  {error.message}
-                </Typography>
-              </Grid>
-            </Grid>
-          )}
-        </form>
+        )}
+        {/* </form> */}
       </div>
     );
   }
   render() {
-    return !this.state.fileContent ? this.renderDropzone() : this.renderUnlock();
+    return !this.state.fileContent
+      ? this.renderDropzone()
+      : this.renderUnlock();
   }
 }
 
