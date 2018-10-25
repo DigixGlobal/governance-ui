@@ -5,8 +5,7 @@ import { HashRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 // import { version } from '~/../package.json';
 
-import GovernanceUi from '@digix/governance-ui-components/src/pages';
-import GovUiComponents from '@digix/governance-ui-components/src/ui';
+import GovernanceUi from '@digix/governance-ui-components/src';
 
 import TransactionSigningOverlay from './transactions/transaction_signing_overlay';
 
@@ -28,13 +27,10 @@ export default class App extends Component {
         <div>
           <TransactionSigningOverlay />
           <HashRouter>
-            {/* <ScrollToTopRouter> */}
             <Switch>
-              <Route path="/ui" component={GovUiComponents} />
               <Route path="/keystores" component={Keystores} />
               <Route path="/" component={GovernanceUi} />
             </Switch>
-            {/* </ScrollToTopRouter> */}
           </HashRouter>
         </div>
       </MuiThemeProvider>
