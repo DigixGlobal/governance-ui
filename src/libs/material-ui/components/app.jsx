@@ -8,6 +8,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import GovernanceUi from '@digix/governance-ui-components/src';
 
 import TransactionSigningOverlay from './transactions/transaction_signing_overlay';
+import MessageSigningOverlay from './MessageSigning/message_signing_overlay';
 
 // import MenuSystem from './common/menu_system';
 
@@ -26,6 +27,7 @@ export default class App extends Component {
       <MuiThemeProvider theme={Theme}>
         <div>
           <TransactionSigningOverlay />
+          <MessageSigningOverlay />
           <HashRouter>
             <Switch>
               <Route path="/keystores" component={Keystores} />

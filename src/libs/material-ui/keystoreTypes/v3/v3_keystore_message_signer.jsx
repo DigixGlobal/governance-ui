@@ -21,17 +21,17 @@ export default class V3KestoreMessageSigner extends Component {
     this.setState({ error: false });
 
     setTimeout(() => {
-      const throwErr = (error) => {
+      const throwErr = error => {
         this.props.setLoading(false);
         this.setState({ error });
       };
       try {
-        const { address, txData } = this.props;
+        const { address, txData, web3Redux } = this.props;
         const { keystore } = address;
         const { password } = this.state;
 
         // const buff = new Buffer(util.stripHexPrefix(util.sha3(txData)), 'hex');
-        v3SignMsg({ txData, keystore, password })
+        v3SignMsg({ txData, keystore, password, web3Redux })
           .then(this.props.hideMsgSigningModal)
           .catch(throwErr);
       } catch (error) {
@@ -54,7 +54,12 @@ export default class V3KestoreMessageSigner extends Component {
             size="large"
             onChange={this.handleChange}
             value={this.state.password}
-            action={{ color: 'green', labelPosition: 'right', icon: 'checkmark', content: 'Sign Transaction' }}
+            action={{
+              color: 'green',
+              labelPosition: 'right',
+              icon: 'checkmark',
+              content: 'Sign Message'
+            }}
             placeholder="Enter Password"
             type="password"
           />
@@ -69,5 +74,5 @@ V3KestoreMessageSigner.propTypes = {
   setLoading: PropTypes.func.isRequired,
   hideMsgSigningModal: PropTypes.func.isRequired,
   address: PropTypes.object.isRequired,
-  txData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+  txData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired
 };

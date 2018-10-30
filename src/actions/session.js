@@ -51,6 +51,7 @@ export function hideTxSigningModal(payload) {
 let signingMsgDeferred;
 
 export function showMsgSigningModal(payload) {
+
   return (dispatch) => {
     if (signingMsgDeferred && signingMsgDeferred.pending) {
       return new Error('Already Signing a Transaction');

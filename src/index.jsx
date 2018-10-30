@@ -8,6 +8,8 @@ import '@digix/governance-ui-components/src/global-styles';
 import './helpers/offlinePlugin';
 import uiMapper from './helpers/uiMapper';
 
+import 'semantic-ui-less/semantic.less';
+
 import SpectrumConfig from '../spectrum.config';
 
 const renderApp = () => {

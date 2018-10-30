@@ -115,9 +115,7 @@ class ImportKeystoreForm extends Component {
       .catch(error => this.props.setError(error));
   }
   handleKeydown = event => {
-    console.log(event.keyCode);
     if (event.keyCode === 13) {
-      console.log('unlocking!');
       this.handleUnlock();
     }
   };
