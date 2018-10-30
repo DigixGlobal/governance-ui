@@ -15,24 +15,24 @@ import signTx from './v3_sign_tx';
 const styles = theme => ({
   root: {
     display: 'flex',
-    flexWrap: 'wrap',
+    flexWrap: 'wrap'
   },
   form: {
-    width: '98%',
+    width: '98%'
   },
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing.unit
   },
   margin: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit
   },
   withoutLabel: {
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 3
   },
   textField: {
     width: '100%',
-    marginTop: '2rem',
-  },
+    marginTop: '2rem'
+  }
 });
 
 class V3KestoreTransactionSigner extends Component {
@@ -43,7 +43,9 @@ class V3KestoreTransactionSigner extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.triggerSubmit = this.triggerSubmit.bind(this);
 
-    this.signingButton = () => <Button onClick={this.triggerSubmit}>Sign Transaction</Button>;
+    this.signingButton = () => (
+      <Button onClick={this.triggerSubmit}>Sign Transaction</Button>
+    );
   }
 
   onKeyPress(e) {
@@ -67,7 +69,7 @@ class V3KestoreTransactionSigner extends Component {
     this.setState({ error: false });
 
     setTimeout(() => {
-      const throwErr = (error) => {
+      const throwErr = error => {
         this.props.setLoading(false, this.signingButton);
         this.setState({ error });
       };
@@ -93,23 +95,19 @@ class V3KestoreTransactionSigner extends Component {
     const { error, password } = this.state;
     const { classes } = this.props;
     return (
-      // <Form onSubmit={this.handleSubmit} error={!!error}>
-      //   <Form.Field>
-      //     <Input
-      //       fluid
-      //       size="large"
-      //       onChange={this.handleChange}
-      //       value={this.state.password}
-      //       action={{ color: 'green', labelPosition: 'right', icon: 'checkmark', content: 'Sign Transaction' }}
-      //       placeholder="Enter Password"
-      //       type="password"
-      //     />
-      //     {error && <ErrorMessage content={error} />}
-      //   </Form.Field>
-      // </Form>
       <div className={classes.root}>
-        <form onSubmit={this.handleSubmit} noValidate autoComplete="off" className={classes.form}>
-          <Grid container alignItems="center" alignContent="center" spacing={24}>
+        <form
+          onSubmit={this.handleSubmit}
+          noValidate
+          autoComplete="off"
+          className={classes.form}
+        >
+          <Grid
+            container
+            alignItems="center"
+            alignContent="center"
+            spacing={24}
+          >
             <Grid item xs={8} md={12}>
               <FormControl className={classes.textField}>
                 <Input
@@ -129,7 +127,12 @@ class V3KestoreTransactionSigner extends Component {
             </Grid>
           </Grid>
           {error && (
-            <Grid container alignItems="center" alignContent="center" spacing={24}>
+            <Grid
+              container
+              alignItems="center"
+              alignContent="center"
+              spacing={24}
+            >
               <Grid item xs={4} md={12}>
                 <Typography align="center" color="error">
                   {error.message}
@@ -137,22 +140,6 @@ class V3KestoreTransactionSigner extends Component {
               </Grid>
             </Grid>
           )}
-          {/* <Grid container spacing={24} alignContent="center">
-            <Grid item md={8}>
-              <FormControl fullWidth className={classNames(classes.margin)}>
-                <InputLabel htmlFor="adornment-password">Enter Password</InputLabel>
-                <Input
-                  id="adornment-password"
-                  type={this.state.showPassword ? 'text' : 'password'}
-                  value={this.state.password}
-                  onChange={this.handleChange}
-                  onKeyPress={this.onKeyPress}
-                />
-
-                {error && <ErrorMessage content={error} />}
-              </FormControl>
-            </Grid>
-          </Grid> */}
         </form>
       </div>
     );
@@ -164,7 +151,7 @@ V3KestoreTransactionSigner.propTypes = {
   hideTxSigningModal: PropTypes.func.isRequired,
   address: PropTypes.object.isRequired,
   txData: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(V3KestoreTransactionSigner);

@@ -1,13 +1,40 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'semantic-ui-react';
-// import util from 'ethereumjs-util';
+import { withStyles } from '@material-ui/core/styles';
 
 import ErrorMessage from '~/libs/material-ui/components/common/error_message';
+import Grid from '@material-ui/core/Grid';
+// import Input from '@material-ui/core/Input';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
+  form: {
+    width: '100%'
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit
+  },
+  margin: {
+    margin: theme.spacing.unit
+  },
+  withoutLabel: {
+    marginTop: theme.spacing.unit * 3
+  },
+  textField: {
+    width: '100%',
+    marginTop: '2rem'
+  }
+});
 
 import { v3SignMsg } from './v3_sign_tx';
 
-export default class V3KestoreMessageSigner extends Component {
+export class V3KestoreMessageSigner extends Component {
   constructor(props) {
     super(props);
     this.state = { password: '', error: false };
@@ -46,7 +73,55 @@ export default class V3KestoreMessageSigner extends Component {
 
   render() {
     const { error } = this.state;
+    const { classes } = this.props;
     return (
+      // <div className={classes.root}>
+      //   <form
+      //     onSubmit={this.handleSubmit}
+      //     noValidate
+      //     autoComplete="off"
+      //     className={classes.form}
+      //   >
+      //     <Grid
+      //       container
+      //       alignItems="center"
+      //       alignContent="center"
+      //       spacing={24}
+      //     >
+      //       <Grid item xs={8} md={12}>
+      //         <FormControl className={classes.textField}>
+      //           <Input
+      //             label="Enter Password"
+      //             id="name-simple"
+      //             value={this.state.password}
+      //             type="password"
+      //             error={error}
+      //             onChange={this.handleChange}
+      //             autoFocus
+      //             fullWidth
+      //             placeholder="Enter Password"
+      //             helperText="Enter your Password to Sign Message"
+      //           />
+      //         </FormControl>
+      //         {/* <TextField label="Name" placeholder="Address nickname" onChange={this.handleUpdatePassword} fullWidth /> */}
+      //       </Grid>
+      //     </Grid>
+      //     {error && (
+      //       <Grid
+      //         container
+      //         alignItems="center"
+      //         alignContent="center"
+      //         spacing={24}
+      //       >
+      //         <Grid item xs={4} md={12}>
+      //           <Typography align="center" color="error">
+      //             {error.message}
+      //           </Typography>
+      //         </Grid>
+      //       </Grid>
+      //     )}
+      //   </form>
+      // </div>
       <Form onSubmit={this.handleSubmit} error={!!error}>
         <Form.Field>
           <Input
@@ -74,5 +149,8 @@ V3KestoreMessageSigner.propTypes = {
   setLoading: PropTypes.func.isRequired,
   hideMsgSigningModal: PropTypes.func.isRequired,
   address: PropTypes.object.isRequired,
-  txData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired
+  txData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+  classes: PropTypes.object.isRequired
 };
+
+export default withStyles(styles)(V3KestoreMessageSigner);

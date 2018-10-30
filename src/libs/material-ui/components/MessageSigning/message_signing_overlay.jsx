@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
+import green from '@material-ui/core/colors/green';
 import { Divider, Modal, Button, Dimmer, Loader } from 'semantic-ui-react';
+
+import Dialog from '@digix/mui/lib/components/Dialog';
 
 import { getKeystoreComponent } from '../../keystoreTypes';
 import {
@@ -12,6 +16,67 @@ import web3Connect from '~/helpers/web3/connect';
 import { hideMsgSigningModal } from '~/actions/session';
 
 const defaultState = { loading: false, autoBroadcast: true, signedTx: null };
+
+const styles = theme => ({
+  walletIcon: {
+    height: '60px',
+    width: '100%',
+    color: theme.palette.secondary.main
+  },
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%'
+  },
+  wrapper: {
+    position: 'relative',
+    margin: '0 auto'
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit
+  },
+  label: {
+    color: theme.palette.primary.main
+  },
+  noMinHeight: {
+    minHeight: 'none'
+  },
+  dialogContent: {
+    margin: '0 auto',
+    width: '100%'
+  },
+  loadingRoot: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  loadingWrapper: {
+    margin: theme.spacing.unit,
+    position: 'relative'
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    top: '-20px',
+    left: '-12px',
+    '&:hover': {
+      backgroundColor: green[700]
+    }
+  },
+  fabProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: -26,
+    left: -18,
+    zIndex: 1
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
+  }
+});
 
 class MessageSigningOverlay extends Component {
   constructor(props) {
@@ -46,14 +111,14 @@ class MessageSigningOverlay extends Component {
     this.props.hideMsgSigningModal({ error: 'Cancelled Signing' });
   }
   render() {
-    const { data, address, web3Redux } = this.props;
+    const { data, address, web3Redux, classes } = this.props;
 
     if (!data) {
       return null;
     }
     const { network, txData } = data;
     const { keystore } = address;
-    const { signedTx } = this.state;
+    const { signedTx, loading } = this.state;
     if (!txData || !keystore) {
       return null;
     }
@@ -62,6 +127,40 @@ class MessageSigningOverlay extends Component {
       type: 'messageSigner'
     });
     return (
+      // <Dialog
+      //   initiallyOpen
+      //   className={classes.noMinHeight}
+      //   contentClasses={{
+      //     root: classes.dialogContent
+      //   }}
+      //   title="Sign Message"
+      //   renderActions={({ hide }) => (
+      //     <div>
+      //       {(address || error) &&
+      //         !loading && (
+      //           <Button className={classes.button} onClick={this.handleSign}>
+      //             Sign Message
+      //           </Button>
+      //         )}
+      //     </div>
+      //   )}
+      // >
+      //   {!signedTx ? (
+      //     <SigningComponent
+      //       {...{ network, address, txData, web3Redux }}
+      //       setLoading={this.handleSetLoading}
+      //       hideMsgSigningModal={this.handleSign}
+      //     />
+      //   ) : (
+      //     <div>
+      //       <p>
+      //         <b>Signed Transaction:</b>
+      //         <br />
+      //         <code style={{ wordWrap: 'break-word' }}>{signedTx}</code>
+      //       </p>
+      //     </div>
+      //   )}
+      // </Dialog>
       <Modal open size="small">
         <Modal.Header>Sign Message</Modal.Header>
         <Modal.Content>
@@ -99,7 +198,8 @@ class MessageSigningOverlay extends Component {
 MessageSigningOverlay.propTypes = {
   data: PropTypes.object,
   hideMsgSigningModal: PropTypes.func.isRequired,
-  address: PropTypes.object
+  address: PropTypes.object,
+  classes: PropTypes.object.isRequired
 };
 
 MessageSigningOverlay.defaultProps = {
@@ -107,12 +207,16 @@ MessageSigningOverlay.defaultProps = {
   address: undefined
 };
 
-export default web3Connect(connect(
-  state => ({
-    data: getSigningMessageModalData(state),
-    address: getDefaultAddressAndKeyStore(state)
-  }),
-  {
-    hideMsgSigningModal
-  }
-)(MessageSigningOverlay));
+export default withStyles(styles)(
+  web3Connect(
+    connect(
+      state => ({
+        data: getSigningMessageModalData(state),
+        address: getDefaultAddressAndKeyStore(state)
+      }),
+      {
+        hideMsgSigningModal
+      }
+    )(MessageSigningOverlay)
+  )
+);

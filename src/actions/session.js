@@ -54,7 +54,8 @@ export function showMsgSigningModal(payload) {
 
   return (dispatch) => {
     if (signingMsgDeferred && signingMsgDeferred.pending) {
-      return new Error('Already Signing a Transaction');
+      // return new Error('Already Signing a Transaction');
+      return signingMsgDeferred;
     }
     dispatch({ type: actions.UPDATE_SESSION, payload: { signingMsgModalData: payload } });
     signingMsgDeferred = new Deferred();
