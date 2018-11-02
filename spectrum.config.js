@@ -2,17 +2,21 @@
 
 // const digix = require('./src/themes/material-ui/digix');
 
+const NETWORKS =
+  (process.env.ENVIRONMENT === 'production' && 'eth-mainnet') ||
+  (process.env.ENVIRONMENT === 'kovan' && 'eth-kovan') ||
+  'testrpc';
 
-const env = process.env.ENVIRONMENT === 'production' ? 'eth-mainnet' : 'eth-kovan';
+// const env = process.env.ENVIRONMENT === 'production' ? 'eth-mainnet' : 'eth-kovan';
 
 module.exports = {
   publicPath: '/',
   appTitle: 'Digix Spectrum',
   menuStyle: 'hamburger',
   keystoreTypes: ['v3', 'ledger', 'metamask', 'trezor', 'imtoken'],
-  defaultNetworks: [env],
-  enabledNetworks: [env],
-  availableNetworks: [env],
+  defaultNetworks: [NETWORKS],
+  enabledNetworks: [NETWORKS],
+  availableNetworks: [NETWORKS],
   persistCore: false,
   // themeFolder: '@digix/sui-theme/semantic-ui',
   dappletName: 'Digix Carbon Voting',

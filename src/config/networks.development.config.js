@@ -73,7 +73,7 @@ module.exports = [
     name: 'TestRPC',
     symbol: 'ETH-testrpc',
     description: 'Local Virtual Test Chain',
-    provider: 'http://localhost:6545',
+    provider: 'http://localhost:8545',
     id: 'testrpc',
     color: 'blue',
     chainId: 67,

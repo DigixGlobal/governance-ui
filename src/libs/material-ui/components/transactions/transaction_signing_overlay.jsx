@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { connect } from 'react-redux';
 // import { Divider, Modal, Button, Dimmer, Loader } from 'semantic-ui-react';
 
@@ -8,6 +9,16 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
+import Collapse from '@material-ui/core/Collapse';
+import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
+import TextField from '@material-ui/core/TextField';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Slider from '@digix/mui/lib/components/SimpleSlider';
+
+import '@digix/mui/lib/assets/css/simpleSlider.css';
+
+import { withStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -19,17 +30,113 @@ import { hideTxSigningModal } from '~/actions/session';
 import { getKeystoreComponent } from '../../keystoreTypes';
 
 import TransactionInfo from './transaction_info';
-// import Advanced from '../common/advanced';
+import Advanced from '../common/advanced';
 
-const defaultState = { loading: false, autoBroadcast: true, signedTx: null, signingAction: undefined };
+const defaultState = {
+  loading: false,
+  autoBroadcast: true,
+  signedTx: null,
+  signingAction: undefined,
+  openAdvanced: false,
+  gasPrice: 20
+};
 
+const styles = theme => ({
+  expand: {
+    transform: 'rotate(0deg)',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest
+    })
+  },
+  slider: {
+    margin: '3em 0 0 0'
+  },
+  advancedBtn: {
+    fontWeight: '300',
+    border: 0,
+    marginTop: '1.5em',
+    padding: 0,
+    fontSize: '0.8em',
+    textAlign: 'center'
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)'
+  },
+  card: {
+    padding: '2rem',
+    borderRadius: '.5rem',
+    background: 'rgba(70, 78, 91, 0.2);',
+    boxShadow: 'none',
+    textAlign: 'center',
+    [theme.breakpoints.between('xs', 'sm')]: {
+      padding: '2em 1em'
+    }
+  },
+  noPadding: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 !important'
+  },
+  typography: {
+    margin: '1em 0 2em 0',
+    color: '#000'
+  },
+  voteSelection: {
+    background: '#E2CE98',
+    borderRadius: '50px',
+    textAlign: 'center',
+    padding: '0 !important'
+  },
+  selected: {
+    margin: '0',
+    // color: globalVars.tertiaryColor,
+    fontSize: '1.5em',
+    paddingRight: '1rem'
+  },
+  textField: {
+    // color: globalVars.tertiaryColor,
+    width: 'auto',
+    textAlign: 'center',
+    fontSize: '1.1em',
+    fontWeight: '600',
+    '&': {
+      '-moz-appearance': 'textfield'
+    },
+    '&::-webkit-inner-spin-button, &::-webkit-inner-spin-button': {
+      '-webkit-appearance': 'none',
+      margin: 0
+    }
+  },
+  noBorder: {
+    border: '0',
+    '&::before': {
+      borderBottom: '0'
+    },
+    ':hover': {
+      border: 'none'
+    }
+  },
+  minValue: {
+    textAlign: 'left',
+    fontSize: '1.3em',
+    color: '#000',
+    marginTop: '1em'
+  },
+  maxValue: {
+    textAlign: 'right',
+    fontSize: '1.3em',
+    color: '#000',
+    marginTop: '1em'
+  }
+});
 class TransactionSigningOverlay extends Component {
   static propTypes = {
     data: PropTypes.object,
     hideTxSigningModal: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired
   };
   static defaultProps = {
-    data: undefined,
+    data: undefined
   };
   constructor(props) {
     super(props);
@@ -39,6 +146,23 @@ class TransactionSigningOverlay extends Component {
     this.handleSetLoading = this.handleSetLoading.bind(this);
     this.handleSign = this.handleSign.bind(this);
   }
+
+  componentWillReceiveProps = nextProps => {
+    const { data } = nextProps;
+    if (data) {
+      const { txData } = data;
+      const { gasPrice } = txData;
+      this.setState({ gasPrice: gasPrice / 1e9 });
+    }
+  };
+
+  setGasPrice = gasPrice => {
+    // this.props.setTxFee(gasPrice);
+    this.setState({
+      gasPrice
+    });
+  };
+
   handleSetLoading(loading, signingAction) {
     this.setState({ loading, signingAction });
   }
@@ -62,18 +186,43 @@ class TransactionSigningOverlay extends Component {
     this.setState(defaultState);
     this.props.hideTxSigningModal({ error: 'Cancelled Signing' });
   }
+  handleChange = (name, { min, max }) => event => {
+    const value = parseFloat(event.target.value) || min;
+    this.setState({
+      [name]: value > max ? max : value
+    });
+  };
   render() {
-    const { data } = this.props;
+    const { data, classes } = this.props;
     if (!data) {
       return null;
     }
+
     const { network, address, txData, ui } = data;
     const { keystore } = address;
-    const { autoBroadcast, signedTx, signingAction, loading } = this.state;
+    const {
+      autoBroadcast,
+      signedTx,
+      signingAction,
+      loading,
+      gasPrice,
+      openAdvanced
+    } = this.state;
     if (!txData || !keystore) {
       return null;
     }
-    const SigningComponent = getKeystoreComponent({ id: keystore.type.id, type: 'transactionSigner' });
+
+    const { gasPrice: txGas, ...rest } = txData;
+    const newTxData = {
+      gasPrice: `0x${(Number(gasPrice) * 1e9).toString(16)}`,
+      ...rest
+    };
+
+    console.log({ txData, newTxData });
+    const SigningComponent = getKeystoreComponent({
+      id: keystore.type.id,
+      type: 'transactionSigner'
+    });
     return (
       <Dialog
         open
@@ -91,30 +240,95 @@ class TransactionSigningOverlay extends Component {
               {this.state.loading && <LinearProgress />}
             </Grid>
             <Grid item xs={12}>
-              <TransactionInfo {...{ address, ui, txData, network }} />
+              <TransactionInfo
+                {...{ address, ui, txData: newTxData, network }}
+              />
             </Grid>
             <Grid item xs={12}>
               {!signedTx ? (
                 <div>
                   <SigningComponent
-                    {...{ network, address, txData }}
+                    {...{ network, address, txData: newTxData }}
                     setLoading={this.handleSetLoading}
                     hideTxSigningModal={this.handleSign}
                   />
-                  <br />
-                  {/* <Advanced>
-                    <br />
-                    <br />
-                    <Button
-                      content="Broadcast Transaction"
-                      icon={autoBroadcast ? 'checkmark' : 'remove'}
-                      color={autoBroadcast ? 'green' : 'red'}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        this.setState({ autoBroadcast: !autoBroadcast });
-                      }}
+                  <Button
+                    variant="outlined"
+                    className={classes.advancedBtn}
+                    disableRipple
+                    disableTouchRipple
+                    onClick={e => {
+                      e.preventDefault();
+                      this.setState({ openAdvanced: !openAdvanced });
+                    }}
+                  >
+                    Advanced
+                    <ExpandMoreIcon
+                      className={classnames(classes.expand, {
+                        [classes.expandOpen]: openAdvanced
+                      })}
                     />
-                  </Advanced> */}
+                  </Button>
+
+                  <Collapse in={openAdvanced}>
+                    <Card className={classes.card}>
+                      <Grid container>
+                        <Grid item xs={9} className={classes.noPadding}>
+                          <Typography className={classes.typography}>
+                            GAS PRICE
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={3} className={classes.voteSelection}>
+                          <Typography
+                            className={classes.selected}
+                            variant="caption"
+                          >
+                            <TextField
+                              inputProps={{
+                                step: 1,
+                                min: 1,
+                                max: 100,
+                                className: classes.textField
+                              }}
+                              type="number"
+                              value={gasPrice}
+                              /* eslint-disable react/jsx-no-duplicate-props */
+                              InputProps={{
+                                classes: {
+                                  root: classes.textField,
+                                  input: classes.noBorder,
+                                  underline: classes.noBorder
+                                }
+                              }}
+                              onChange={this.handleChange('gasPrice', {
+                                min: 1,
+                                max: 100
+                              })}
+                            />{' '}
+                            GWEI
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <div className={classes.slider}>
+                            <Slider
+                              start={[gasPrice]}
+                              onUpdate={this.setGasPrice}
+                              step={1}
+                              range={{ min: 1, max: 100 }}
+                            />
+                            <Grid container>
+                              <Grid item xs={6} className={classes.minValue}>
+                                1
+                              </Grid>
+                              <Grid item xs={6} className={classes.maxValue}>
+                                100
+                              </Grid>
+                            </Grid>
+                          </div>
+                        </Grid>
+                      </Grid>
+                    </Card>
+                  </Collapse>
                 </div>
               ) : (
                 <div>
@@ -127,7 +341,7 @@ class TransactionSigningOverlay extends Component {
                     content="Broadcast Transaction"
                     icon="bullhorn"
                     color="green"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.preventDefault();
                       this.handleBroadcast({ signedTx });
                     }}
@@ -144,66 +358,11 @@ class TransactionSigningOverlay extends Component {
           {signingAction && !loading && signingAction()}
         </DialogActions>
       </Dialog>
-      // <Modal open size="small">
-      //   <Modal.Header>Sign Transaction</Modal.Header>
-      //   <Modal.Content>
-      //     {this.state.loading && (
-      //       <Dimmer active inverted>
-      //         <Loader>{this.state.loading}</Loader>
-      //       </Dimmer>
-      //     )}
-      //     <TransactionInfo {...{ address, ui, txData, network }} />
-      //     <Divider hidden />
-      // {!signedTx ? (
-      //   <div>
-      //     <SigningComponent
-      //       {...{ network, address, txData }}
-      //       setLoading={this.handleSetLoading}
-      //       hideTxSigningModal={this.handleSign}
-      //     />
-      //     <br />
-      //     <Advanced>
-      //       <br />
-      //       <br />
-      //       <Button
-      //         content="Broadcast Transaction"
-      //         icon={autoBroadcast ? 'checkmark' : 'remove'}
-      //         color={autoBroadcast ? 'green' : 'red'}
-      //         onClick={(e) => {
-      //           e.preventDefault();
-      //           this.setState({ autoBroadcast: !autoBroadcast });
-      //         }}
-      //       />
-      //     </Advanced>
-      //   </div>
-      // ) : (
-      //   <div>
-      //     <p>
-      //       <b>Signed Transaction:</b>
-      //       <br />
-      //       <code style={{ wordWrap: 'break-word' }}>{signedTx}</code>
-      //     </p>
-      //     <Button
-      //       content="Broadcast Transaction"
-      //       icon="bullhorn"
-      //       color="green"
-      //       onClick={(e) => {
-      //         e.preventDefault();
-      //         this.handleBroadcast({ signedTx });
-      //       }}
-      //     />
-      //   </div>
-      //     )}
-      //   </Modal.Content>
-      //   <Modal.Actions>
-      //     <Button content="Cancel Signing" onClick={this.handleCancel} />
-      //   </Modal.Actions>
-      // </Modal>
     );
   }
 }
 
 export default connect(
   state => ({ data: getSigningModalData(state) }),
-  { hideTxSigningModal },
-)(TransactionSigningOverlay);
+  { hideTxSigningModal }
+)(withStyles(styles)(TransactionSigningOverlay));
