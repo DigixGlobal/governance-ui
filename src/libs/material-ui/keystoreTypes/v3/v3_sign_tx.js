@@ -31,8 +31,11 @@ const signMsgHash = (privKey, msgHash) =>
 
 export const v3SignMsg = ({ txData, keystore, password }) =>
   new Promise((resolve) => {
+    const msgBuffer = new Buffer(txData);
+    const prefix = new Buffer('\x19Ethereum Signed Message:\n');
+    const prefixedMsg = util.sha3(Buffer.concat([prefix, new Buffer(String(msgBuffer.length)), msgBuffer]));
     const privateKey = Wallet.fromV3(keystore.data, password).getPrivateKey();
-    const msgHash = util.addHexPrefix(util.sha3(JSON.stringify(txData)).toString('hex'));
+    const msgHash = util.addHexPrefix(prefixedMsg.toString('hex'));
     const signedMsgHash = signMsgHash(privateKey, msgHash);
     const signedTx = concatSig(signedMsgHash);
     resolve({ signedTx });
