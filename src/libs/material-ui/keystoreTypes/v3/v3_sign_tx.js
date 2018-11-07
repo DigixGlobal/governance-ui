@@ -30,8 +30,10 @@ const signMsgHash = (privKey, msgHash) =>
   util.ecsign(new Buffer(util.stripHexPrefix(msgHash), 'hex'), new Buffer(privKey, 'hex'));
 
 export const v3SignMsg = ({ txData, keystore, password }) =>
-  new Promise((resolve) => {
-    const msgBuffer = new Buffer(txData);
+  {
+    console.log(JSON.stringify(txData.txData));
+    return new Promise((resolve) => {
+    const msgBuffer = new Buffer(txData.txData);
     const prefix = new Buffer('\x19Ethereum Signed Message:\n');
     const prefixedMsg = util.sha3(Buffer.concat([prefix, new Buffer(String(msgBuffer.length)), msgBuffer]));
     const privateKey = Wallet.fromV3(keystore.data, password).getPrivateKey();
@@ -39,7 +41,7 @@ export const v3SignMsg = ({ txData, keystore, password }) =>
     const signedMsgHash = signMsgHash(privateKey, msgHash);
     const signedTx = concatSig(signedMsgHash);
     resolve({ signedTx });
-  });
+  });}
 
 const recoverAddress = (rawMsg, v, r, s) => {
   const msgHash = util.sha3(rawMsg);
