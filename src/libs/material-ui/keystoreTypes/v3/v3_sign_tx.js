@@ -31,7 +31,6 @@ const signMsgHash = (privKey, msgHash) =>
 
 export const v3SignMsg = ({ txData, keystore, password }) =>
   {
-    console.log(JSON.stringify(txData.txData));
     return new Promise((resolve) => {
     const msgBuffer = new Buffer(txData.txData);
     const prefix = new Buffer('\x19Ethereum Signed Message:\n');

@@ -166,6 +166,7 @@ class TransactionSigningOverlay extends Component {
   handleSetLoading(loading, signingAction) {
     this.setState({ loading, signingAction });
   }
+
   handleBroadcast(...args) {
     this.setState(defaultState);
     this.props.hideTxSigningModal(...args);
@@ -218,7 +219,6 @@ class TransactionSigningOverlay extends Component {
       ...rest
     };
 
-    console.log({ txData, newTxData });
     const SigningComponent = getKeystoreComponent({
       id: keystore.type.id,
       type: 'transactionSigner'

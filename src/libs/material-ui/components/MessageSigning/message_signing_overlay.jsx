@@ -6,6 +6,8 @@ import green from '@material-ui/core/colors/green';
 import { Divider, Modal, Button, Dimmer, Loader } from 'semantic-ui-react';
 
 import Dialog from '@digix/mui/lib/components/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { getKeystoreComponent } from '../../keystoreTypes';
 import {
@@ -14,8 +16,15 @@ import {
 } from '~/selectors';
 import web3Connect from '~/helpers/web3/connect';
 import { hideMsgSigningModal } from '~/actions/session';
+import { DialogContent } from '@material-ui/core';
 
-const defaultState = { loading: false, autoBroadcast: true, signedTx: null };
+const defaultState = {
+  loading: false,
+  autoBroadcast: true,
+  signingAction: undefined,
+  signedTx: null,
+  sign: false
+};
 
 const styles = theme => ({
   walletIcon: {
@@ -81,14 +90,15 @@ const styles = theme => ({
 class MessageSigningOverlay extends Component {
   constructor(props) {
     super(props);
+
     this.state = defaultState;
     this.handleFailure = this.handleFailure.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleSetLoading = this.handleSetLoading.bind(this);
     this.handleSign = this.handleSign.bind(this);
   }
-  handleSetLoading(loading) {
-    this.setState({ loading });
+  handleSetLoading(loading, signingAction) {
+    this.setState({ loading, signingAction });
   }
   handleBroadcast(...args) {
     this.setState(defaultState);
@@ -118,7 +128,7 @@ class MessageSigningOverlay extends Component {
     }
     const { network, txData } = data;
     const { keystore } = address;
-    const { signedTx, loading } = this.state;
+    const { signedTx, loading, signingAction } = this.state;
     if (!txData || !keystore) {
       return null;
     }
@@ -127,56 +137,27 @@ class MessageSigningOverlay extends Component {
       type: 'messageSigner'
     });
     return (
-      // <Dialog
-      //   initiallyOpen
-      //   className={classes.noMinHeight}
-      //   contentClasses={{
-      //     root: classes.dialogContent
-      //   }}
-      //   title="Sign Message"
-      //   renderActions={({ hide }) => (
-      //     <div>
-      //       {(address || error) &&
-      //         !loading && (
-      //           <Button className={classes.button} onClick={this.handleSign}>
-      //             Sign Message
-      //           </Button>
-      //         )}
-      //     </div>
-      //   )}
-      // >
-      //   {!signedTx ? (
-      //     <SigningComponent
-      //       {...{ network, address, txData, web3Redux }}
-      //       setLoading={this.handleSetLoading}
-      //       hideMsgSigningModal={this.handleSign}
-      //     />
-      //   ) : (
-      //     <div>
-      //       <p>
-      //         <b>Signed Transaction:</b>
-      //         <br />
-      //         <code style={{ wordWrap: 'break-word' }}>{signedTx}</code>
-      //       </p>
-      //     </div>
-      //   )}
-      // </Dialog>
-      <Modal open size="small">
-        <Modal.Header>Sign Message</Modal.Header>
-        <Modal.Content>
-          {this.state.loading && (
-            <Dimmer active inverted>
-              <Loader>{this.state.loading}</Loader>
-            </Dimmer>
-          )}
+      <Dialog
+        initiallyOpen
+        className={classes.noMinHeight}
+        contentClasses={{
+          root: classes.dialogContent
+        }}
+        renderActions={({ hide }) => (
+          <div>
+            <Button onClick={this.handleCancel}>Cancel Signing</Button>
+            {signingAction && !loading && signingAction()}
+          </div>
+        )}
+      >
+        <DialogTitle id="alert-dialog-title">Transaction Status</DialogTitle>
+        <DialogContent>
           {!signedTx ? (
-            <div>
-              <SigningComponent
-                {...{ network, address, txData, web3Redux }}
-                setLoading={this.handleSetLoading}
-                hideMsgSigningModal={this.handleSign}
-              />
-            </div>
+            <SigningComponent
+              {...{ network, address, txData, web3Redux }}
+              setLoading={this.handleSetLoading}
+              hideMsgSigningModal={this.handleSign}
+            />
           ) : (
             <div>
               <p>
@@ -186,11 +167,38 @@ class MessageSigningOverlay extends Component {
               </p>
             </div>
           )}
-        </Modal.Content>
-        <Modal.Actions>
-          <Button content="Cancel Signing" onClick={this.handleCancel} />
-        </Modal.Actions>
-      </Modal>
+        </DialogContent>
+      </Dialog>
+      // <Modal open size="small">
+      //   <Modal.Header>Sign Message</Modal.Header>
+      //   <Modal.Content>
+      //     {this.state.loading && (
+      //       <Dimmer active inverted>
+      //         <Loader>{this.state.loading}</Loader>
+      //       </Dimmer>
+      //     )}
+      //     {!signedTx ? (
+      //       <div>
+      //         <SigningComponent
+      //           {...{ network, address, txData, web3Redux }}
+      //           setLoading={this.handleSetLoading}
+      //           hideMsgSigningModal={this.handleSign}
+      //         />
+      //       </div>
+      //     ) : (
+      //       <div>
+      //         <p>
+      //           <b>Signed Transaction:</b>
+      //           <br />
+      //           <code style={{ wordWrap: 'break-word' }}>{signedTx}</code>
+      //         </p>
+      //       </div>
+      //     )}
+      //   </Modal.Content>
+      //   <Modal.Actions>
+      //     <Button content="Cancel Signing" onClick={this.handleCancel} />
+      //   </Modal.Actions>
+      // </Modal>
     );
   }
 }
