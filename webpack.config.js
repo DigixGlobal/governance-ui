@@ -93,7 +93,7 @@ const baseConfig = {
           // fs.realpathSync(`${__dirname}/node_modules/@digix/kyc-system-ui`),
           // fs.realpathSync(`${__dirname}/node_modules/@digix/poa-ui`),
           // fs.realpathSync(`${__dirname}/node_modules/@digix/poa-ui/node_modules/@digix/sui-react-dijix`),
-        ],//.concat(production ? [fs.realpathSync(`${__dirname}/node_modules/awaiting`)] : []),
+        ].concat(production ? [fs.realpathSync(`${__dirname}/node_modules/awaiting`)] : []),
         use: ['cache-loader', 'babel-loader'],
       },
     //   {test: /\.(js|jsx)$/ , loader:'babel-loader', exclude: '/node_modules/',query: {

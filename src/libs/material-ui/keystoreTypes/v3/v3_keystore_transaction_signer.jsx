@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // import { Form, Input } from 'semantic-ui-react';
 
-import Input from '@material-ui/core/Input';
+import Input from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
 import FormControl from '@material-ui/core/FormControl';

@@ -18,7 +18,7 @@ const renderApp = () => {
 
   const loadedUi = uiMapper(uiLibrary);
 
-  const NewApp = loadedUi.component; // require('~/libs/materialize/components/app').default;
+  const NewApp = require('~/libs/material-ui/components/app').default; //loadedUi.component;
   const store = require('./store').default;
   /* eslint-enable global-require */
   render(

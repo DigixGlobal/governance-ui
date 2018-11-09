@@ -69,7 +69,6 @@ export class V3KestoreMessageSigner extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log('signing');
     this.props.setLoading(true);
     this.signMessage();
   }
