@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
-import { Divider, Modal, Button, Dimmer, Loader } from 'semantic-ui-react';
+// import { Divider, Modal, Button, Dimmer, Loader } from 'semantic-ui-react';
+import Button from '@material-ui/core/Button';
 
 import Dialog from '@digix/mui/lib/components/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -57,6 +58,9 @@ const styles = theme => ({
   loadingRoot: {
     display: 'flex',
     alignItems: 'center'
+  },
+  title: {
+    padding: 0
   },
   loadingWrapper: {
     margin: theme.spacing.unit,
@@ -150,7 +154,9 @@ class MessageSigningOverlay extends Component {
           </div>
         )}
       >
-        <DialogTitle id="alert-dialog-title">Transaction Status</DialogTitle>
+        <DialogTitle id="alert-dialog-title" classes={{ root: classes.title }}>
+          Sign Message
+        </DialogTitle>
         <DialogContent>
           {!signedTx ? (
             <SigningComponent
