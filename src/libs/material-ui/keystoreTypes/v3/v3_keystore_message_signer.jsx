@@ -34,6 +34,9 @@ const styles = theme => ({
   textField: {
     width: '100%',
     marginTop: '2rem'
+  },
+  caption: {
+    marginTop: '2rem'
   }
 });
 
@@ -85,9 +88,10 @@ export class V3KestoreMessageSigner extends Component {
         const { address, txData, web3Redux } = this.props;
         const { keystore } = address;
         const { password } = this.state;
+        const { message } = txData;
 
         // const buff = new Buffer(util.stripHexPrefix(util.sha3(txData)), 'hex');
-        v3SignMsg({ txData, keystore, password, web3Redux })
+        v3SignMsg({ txData: message, keystore, password, web3Redux })
           .then(this.props.hideMsgSigningModal)
           .catch(throwErr);
       } catch (error) {
@@ -104,7 +108,8 @@ export class V3KestoreMessageSigner extends Component {
 
   render() {
     const { error, signing } = this.state;
-    const { classes } = this.props;
+    const { classes, txData } = this.props;
+    const { caption } = txData;
     return (
       <div className={classes.root}>
         <form
@@ -119,6 +124,11 @@ export class V3KestoreMessageSigner extends Component {
             alignContent="center"
             spacing={24}
           >
+            {caption && (
+              <Grid item xs={8} md={12} className={classes.caption}>
+                {caption}
+              </Grid>
+            )}
             <Grid item xs={8} md={12}>
               <FormControl className={classes.textField}>
                 <Input
@@ -126,7 +136,7 @@ export class V3KestoreMessageSigner extends Component {
                   id="name-simple"
                   value={this.state.password}
                   type="password"
-                  error={error !== undefined}
+                  error={error}
                   onChange={this.handleChange}
                   autoFocus
                   fullWidth

@@ -175,36 +175,6 @@ class MessageSigningOverlay extends Component {
           )}
         </DialogContent>
       </Dialog>
-      // <Modal open size="small">
-      //   <Modal.Header>Sign Message</Modal.Header>
-      //   <Modal.Content>
-      //     {this.state.loading && (
-      //       <Dimmer active inverted>
-      //         <Loader>{this.state.loading}</Loader>
-      //       </Dimmer>
-      //     )}
-      //     {!signedTx ? (
-      //       <div>
-      //         <SigningComponent
-      //           {...{ network, address, txData, web3Redux }}
-      //           setLoading={this.handleSetLoading}
-      //           hideMsgSigningModal={this.handleSign}
-      //         />
-      //       </div>
-      //     ) : (
-      //       <div>
-      //         <p>
-      //           <b>Signed Transaction:</b>
-      //           <br />
-      //           <code style={{ wordWrap: 'break-word' }}>{signedTx}</code>
-      //         </p>
-      //       </div>
-      //     )}
-      //   </Modal.Content>
-      //   <Modal.Actions>
-      //     <Button content="Cancel Signing" onClick={this.handleCancel} />
-      //   </Modal.Actions>
-      // </Modal>
     );
   }
 }
