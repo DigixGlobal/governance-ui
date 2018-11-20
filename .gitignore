@@ -50,4 +50,4 @@ todo.txt
 stats.json
 errorShots
 .cache-loader
-dist
+dist/production
