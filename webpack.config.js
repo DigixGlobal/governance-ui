@@ -125,6 +125,7 @@ const baseConfig = {
     alias: {
       '@digix/spectrum': path.resolve(__dirname),
       'spectrum-lightsuite': path.resolve(__dirname),
+      '@digix/gov-ui': path.resolve(`${__dirname}/node_modules/@digix/governance-ui-components/src`),
       '../../theme.config$': path.join(__dirname, './src/semantic-ui/theme.config'),
     },
   },
