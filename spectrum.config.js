@@ -11,7 +11,7 @@ const NETWORKS =
 
 module.exports = {
   publicPath: '/',
-  appTitle: 'Digix Spectrum',
+  appTitle: 'DAO Governance',
   menuStyle: 'hamburger',
   keystoreTypes: ['v3', 'ledger', 'metamask', 'trezor', 'imtoken'],
   defaultNetworks: [NETWORKS],
