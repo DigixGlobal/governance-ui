@@ -17,7 +17,7 @@
     "test:watch": "jest --watchAll",
     "test:cucumber": "./node_modules/.bin/wdio wdio.development.config.js",
     "test:cucumber:ci": "echo 'Skipping Seleneium Tests'; # TODO: ./node_modules/.bin/wdio wdio.ci.config.js",
-    "start": "webpack-dev-server --progress --https",
+    "start": "webpack-dev-server --public --host 0.0.0.0 --progress --https",
     "build:stats": "rm -rf ./dist/production; STATS=true ENVIRONMENT=production webpack --progress --profile; npm run stats;",
     "stats": "webpack-bundle-analyzer ./dist/stats.json ./dist/production;",
     "build:demo": "rm -rf ./dist/demo; ENVIRONMENT=demo webpack --progress",
