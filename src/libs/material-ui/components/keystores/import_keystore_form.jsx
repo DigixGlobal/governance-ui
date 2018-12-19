@@ -163,7 +163,7 @@ class ImportKeystoreForm extends Component {
                 id="name-simple"
                 value={password}
                 type="password"
-                error={error}
+                error={error !== false && error !== undefined && error !== null}
                 autoFocus
                 onChange={this.handleUpdatePassword}
                 // fullWidth
