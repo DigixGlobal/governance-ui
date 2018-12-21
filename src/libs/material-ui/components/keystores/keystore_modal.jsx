@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Divider } from 'semantic-ui-react';
 
-import { getKeystoreTypes, getNetworksWithTokens, getDefaultNetworks, getKeystores } from '~/selectors';
+import {
+  getKeystoreTypes,
+  getNetworksWithTokens,
+  getDefaultNetworks,
+  getKeystores
+} from '~/selectors';
 
 import config from '~/../spectrum.config';
 import { getV3FileName } from '~/helpers/stringUtils';
@@ -23,33 +28,33 @@ const styles = theme => ({
   walletIcon: {
     height: '60px',
     width: '100%',
-    color: theme.palette.secondary.main,
+    color: theme.palette.secondary.main
   },
   root: {
     display: 'flex',
     alignItems: 'center',
-    width: '100%',
+    width: '100%'
   },
   wrapper: {
     position: 'relative',
-    margin: '0 auto',
+    margin: '0 auto'
   },
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing.unit
   },
   label: {
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.main
   },
   noMinHeight: {
-    minHeight: 'none',
-  },
+    minHeight: 'none'
+  }
 });
 
 const icons = {
   metamask: MetamaskIcon,
   trezor: TrezorIcon,
   ledger: LedgerIcon,
-  imtoken: ImtokenIcon,
+  imtoken: ImtokenIcon
 };
 
 class KeystoreModal extends Component {
@@ -73,7 +78,7 @@ class KeystoreModal extends Component {
     creatingKeyStore: PropTypes.bool,
     allowedKeystoreTypes: PropTypes.array,
     hideSelector: PropTypes.bool,
-    showBalances: PropTypes.bool,
+    showBalances: PropTypes.bool
   };
   static defaultProps = {
     size: undefined,
@@ -88,7 +93,7 @@ class KeystoreModal extends Component {
     creatingKeyStore: false,
     allowedKeystoreTypes: undefined,
     hideSelector: false,
-    showBalances: false,
+    showBalances: false
   };
   constructor(props) {
     super(props);
@@ -97,14 +102,22 @@ class KeystoreModal extends Component {
     this.resetState = this.resetState.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
-    this.state = { loading: false, error: false, createdAccount: false, data: { ...props.data, ...this.getDefaultData() } };
+    this.state = {
+      loading: false,
+      error: false,
+      createdAccount: false,
+      data: { ...props.data, ...this.getDefaultData() }
+    };
     this.mounted = false;
   }
 
   componentDidMount() {
     if (this.props.skipConfirmation) {
       // populate the name autoamtically
-      this.handleSubmit({ ...this.getDefaultData(), name: 'Imported Keystore' }).then(() => {
+      this.handleSubmit({
+        ...this.getDefaultData(),
+        name: 'Imported Keystore'
+      }).then(() => {
         this.handleClose();
       });
     }
@@ -118,7 +131,7 @@ class KeystoreModal extends Component {
 
     let newStore;
     if (this.props.keystores !== nextProps.keystores && createdAccount) {
-      oldStores.forEach((old) => {
+      oldStores.forEach(old => {
         if (old.type.id === 'v3' && old.addresses.length === 0) {
           newStore = keystores.reduce((store, keystore) => {
             if (keystore.id === old.id) return keystore;
@@ -148,14 +161,19 @@ class KeystoreModal extends Component {
       tokens:
         data.tokens ||
         (networks || []).reduce(
-          (o, network) => o.concat((network.tokens || []).map(token => token.default && token.id).filter(a => a)),
-          [],
-        ),
+          (o, network) =>
+            o.concat(
+              (network.tokens || [])
+                .map(token => token.default && token.id)
+                .filter(a => a)
+            ),
+          []
+        )
     };
   }
 
   downloadKeystore(keystore) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const { data, addresses } = keystore;
       const parsed = JSON.parse(data);
       const { address } = parsed;
@@ -180,7 +198,7 @@ class KeystoreModal extends Component {
             this.setState({ createdAccount: true });
           }
           func = this.props.submitFunc(newFormData || { ...this.state.data }, {
-            ...this.state.data,
+            ...this.state.data
           });
         } catch (error) {
           this.setState({ loading: false, error });
@@ -193,13 +211,13 @@ class KeystoreModal extends Component {
               this.setState({ loading: false });
               resolve();
             })
-            .catch((error) => {
+            .catch(error => {
               this.setState({ loading: false, error });
               reject();
             });
         } else {
           // sync
-          resolve();
+          resolve(this.props.onClose());
         }
       }, 10);
     });
@@ -239,17 +257,17 @@ class KeystoreModal extends Component {
       classes,
       showBalances,
       data: { type },
-      skipConfirmation,
+      skipConfirmation
     } = this.props;
     if (skipConfirmation) return null;
     const keystoreTypes = !config.keystoreTypes
       ? rawKeystores
       : rawKeystores.filter(({ id }) => {
-        if (this.props.allowedKeystoreTypes) {
-          return this.props.allowedKeystoreTypes.indexOf(id) > -1;
-        }
-        return config.keystoreTypes.indexOf(id) > -1;
-      });
+          if (this.props.allowedKeystoreTypes) {
+            return this.props.allowedKeystoreTypes.indexOf(id) > -1;
+          }
+          return config.keystoreTypes.indexOf(id) > -1;
+        });
     const Icon = icons[type];
     return (
       <Dialog
@@ -268,7 +286,8 @@ class KeystoreModal extends Component {
         }
         renderActions={({ hide }) => {
           const showLoadButton =
-            (this.state.data.addresses && Object.keys(this.state.data.addresses).length) ||
+            (this.state.data.addresses &&
+              Object.keys(this.state.data.addresses).length) ||
             this.state.data.type === 'v3' ||
             this.state.data.type === 'metamask' ||
             this.state.data.type === 'imtoken';
@@ -280,7 +299,7 @@ class KeystoreModal extends Component {
                 <Button
                   color="primary"
                   className={classes.button}
-                  onClick={(e) => {
+                  onClick={e => {
                     e.preventDefault();
                     this.handleSubmit();
                   }}
@@ -300,8 +319,17 @@ class KeystoreModal extends Component {
             <KeystoreForm
               // {...this.props}
               formData={this.state.data}
-              formChange={({ value, name }) => this.setState({ data: { ...this.state.data, [name]: value } })}
-              {...{ keystoreTypes, hideMenu, hideSelector, trezor, onSuccess, showBalances }}
+              formChange={({ value, name }) =>
+                this.setState({ data: { ...this.state.data, [name]: value } })
+              }
+              {...{
+                keystoreTypes,
+                hideMenu,
+                hideSelector,
+                trezor,
+                onSuccess,
+                showBalances
+              }}
             />
             {this.state.error && (
               <Typography color="error" variant="caption" align="center">
@@ -319,7 +347,7 @@ const mapStateToProps = state => ({
   keystoreTypes: getKeystoreTypes(state),
   networks: getNetworksWithTokens(state),
   defaultNetworks: getDefaultNetworks(state),
-  keystores: getKeystores(state),
+  keystores: getKeystores(state)
   // default networks
 });
 
