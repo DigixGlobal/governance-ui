@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import TextField from '@material-ui/core/TextField';
 
-export default class V3KeystoreCreationForm extends Component {
+export default class MetamaskKeystoreCreationForm extends Component {
   static propTypes = {
     formData: PropTypes.object.isRequired,
     formChange: PropTypes.func.isRequired,
