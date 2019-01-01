@@ -54,7 +54,7 @@ const icons = {
   metamask: MetamaskIcon,
   trezor: TrezorIcon,
   ledger: LedgerIcon,
-  imtoken: ImtokenIcon
+  imtoken: ImtokenIcon,
 };
 
 class KeystoreModal extends Component {
@@ -69,6 +69,7 @@ class KeystoreModal extends Component {
     data: PropTypes.object,
     keystoreTypes: PropTypes.array.isRequired,
     onClose: PropTypes.func,
+    onSuccess: PropTypes.func,
     networks: PropTypes.array.isRequired,
     skipConfirmation: PropTypes.bool,
     defaultNetworks: PropTypes.array.isRequired,
@@ -78,8 +79,9 @@ class KeystoreModal extends Component {
     creatingKeyStore: PropTypes.bool,
     allowedKeystoreTypes: PropTypes.array,
     hideSelector: PropTypes.bool,
-    showBalances: PropTypes.bool
+    showBalances: PropTypes.bool,
   };
+
   static defaultProps = {
     size: undefined,
     initiallyOpen: undefined,
@@ -88,12 +90,13 @@ class KeystoreModal extends Component {
     hideMenu: undefined,
     data: undefined,
     onClose: undefined,
+    onSuccess: undefined,
     skipConfirmation: false,
     keystores: undefined,
     creatingKeyStore: false,
     allowedKeystoreTypes: undefined,
     hideSelector: false,
-    showBalances: false
+    showBalances: false,
   };
   constructor(props) {
     super(props);
@@ -215,9 +218,18 @@ class KeystoreModal extends Component {
               this.setState({ loading: false, error });
               reject();
             });
-        } else {
-          // sync
-          resolve(this.props.onClose());
+        } else { // sync
+          const { onClose, onSuccess } = this.props;
+
+          if (onClose) {
+            onClose();
+          }
+
+          if (onSuccess) {
+            resolve(onSuccess());
+          }
+
+          resolve();
         }
       }, 10);
     });

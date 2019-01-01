@@ -155,6 +155,7 @@ class ImportKeystore extends Component {
           updateDefaultAddress: this.props.updateDefaultAddress,
         }}
         onClose={this.handleReset}
+        onSuccess={this.props.onSuccess}
         submitFunc={this.props.createKeystore}
         form={KeystoreCreationForm}
         trigger={this.props.trigger}
