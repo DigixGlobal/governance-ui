@@ -101,6 +101,7 @@ class ImportKeystore extends Component {
 
   onKeystoreLoaded(keystore, fileContent) {
     this.setState({ keystoreLoaded: true, keystore, fileContent });
+    this.props.onSuccess();
   }
 
   handleGotPrivateKey({ privateKey, password, name }) {
@@ -108,18 +109,20 @@ class ImportKeystore extends Component {
   }
 
   handleReset() {
-    const { onClose } = this.props;
-    if (this.mounted) {
+    const { onReset } = this.props;
+    if (this.mounted && onReset) {
       this.setState({ privateKey: false, password: null, address: undefined }, () => {
-        if (onClose) onClose();
+        onReset();
       });
     }
   }
+
   handleSetError(error, errorHeader) {
     if (this.mounted) {
       this.setState({ error, errorHeader: error && errorHeader });
     }
   }
+
   handleSetLoading(loading, address, unlockFunc) {
     if (this.mounted) {
       this.setState({ loading, address, unlockFunc });
@@ -130,6 +133,7 @@ class ImportKeystore extends Component {
     if (func) {
       func();
     }
+
     this.handleReset();
   }
 
@@ -228,8 +232,14 @@ ImportKeystore.propTypes = {
   updateDefaultAddress: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   header: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
+  onReset: PropTypes.func,
 };
+
+ImportKeystore.defaultProps = {
+  onReset: undefined,
+};
+
 ImportKeystore.defaultProps = {
   skipConfirmation: false,
   updateDefaultAddress: undefined,
