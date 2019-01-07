@@ -27,29 +27,33 @@ const preSelectedPaths = ["m/44'/60'/0'/0", "m/44'/60'/1'/0", "m/44'/60'/2'/0"];
 
 const testnetPath = "m/44'/1'/0'/0";
 const testnetCustmPath = "m/44'/1'/3'/0";
-const testNetPreselectedPaths = ["m/44'/1'/0'/0", "m/44'/1'/1'/0", "m/44'/1'/2'/0"];
+const testNetPreselectedPaths = [
+  "m/44'/1'/0'/0",
+  "m/44'/1'/1'/0",
+  "m/44'/1'/2'/0"
+];
 
 const styles = theme => ({
   radio: {
     color: '#000',
-    fontSize: '1.325rem',
+    fontSize: '1.325rem'
   },
   subtext: {
     fontSize: '.975rem',
-    color: 'rgba(0, 0, 0, 0.54)',
+    color: 'rgba(0, 0, 0, 0.54)'
   },
   formControl: {
     margin: theme.spacing.unit,
-    width: '96%',
+    width: '96%'
   },
   radioGroup: {
     display: 'flex',
     flexDirection: 'row',
     margin: '2em 0',
     '& label': {
-      minWidth: '200px',
-    },
-  },
+      minWidth: '200px'
+    }
+  }
 });
 
 export class TrezorKeystoreCreationForm extends Component {
@@ -63,26 +67,30 @@ export class TrezorKeystoreCreationForm extends Component {
 
     const { networks } = this.props.formData;
     const defaultNetwork = networks[0];
-    this.paths = preSelectedPaths;
+    this.paths = preSelectedPaths; //preSelectedPaths;
     if (defaultNetwork !== 'eth-mainnet') {
       this.onTestNet = true;
-      this.paths = testNetPreselectedPaths;
+      this.paths = preSelectedPaths; //testNetPreselectedPaths;
     } else {
       this.onTestNet = false;
     }
 
     this.state = {
-      hdPath: this.onTestNet ? testnetPath : defaultPath,
-      customPath: this.onTestNet ? testnetCustmPath : customPath,
+      hdPath: defaultPath,
+      customPath: customPath,
       error: undefined,
       useCustom: false,
-      loading: false,
+      loading: false
     };
   }
 
   handleUpdatePath(e) {
     const text = e.target.value;
-    this.setState({ customPath: e.target.value, useCustom: true, loading: true });
+    this.setState({
+      customPath: e.target.value,
+      useCustom: true,
+      loading: true
+    });
     setTimeout(() => {
       if (!text.endsWith('/')) this.setState({ loading: false });
     }, 100);
@@ -111,17 +119,23 @@ export class TrezorKeystoreCreationForm extends Component {
       this.props.formChange({ name: 'addresses', value: { ...addresses } });
     } else {
       const update = {
-        networks: (addresses[name] || {}).networks || this.props.formData.networks,
+        networks:
+          (addresses[name] || {}).networks || this.props.formData.networks,
         tokens: (addresses[name] || {}).tokens || this.props.formData.tokens,
-        ...value,
+        ...value
       };
-      this.props.formChange({ name: 'addresses', value: { ...addresses, [name]: { ...addresses[name], ...update } } });
+      this.props.formChange({
+        name: 'addresses',
+        value: { ...addresses, [name]: { ...addresses[name], ...update } }
+      });
     }
   }
 
   renderContainer({ renderItems }) {
     const { showBalances } = this.props;
-    const count = Object.values(this.props.formData.addresses || {}).filter(a => a.enabled).length;
+    const count = Object.values(this.props.formData.addresses || {}).filter(
+      a => a.enabled
+    ).length;
     return (
       <Fragment>
         <EnhancedTableToolbar numSelected={count} />
@@ -154,7 +168,8 @@ export class TrezorKeystoreCreationForm extends Component {
         </TableRow>
       );
     }
-    const data = ((this.props.formData || {}).addresses || {})[item.kdPath] || {};
+    const data =
+      ((this.props.formData || {}).addresses || {})[item.kdPath] || {};
     return (
       <TrezorKeystoreAddressItem
         key={item.kdPath}
@@ -178,7 +193,11 @@ export class TrezorKeystoreCreationForm extends Component {
             {path}
             <br />
             <span className={classes.subtext}>
-              {i === 0 && !this.onTestNet ? 'Trezor (Default)' : i === 0 ? 'Trezor (TestNet Default)' : `Account #${i + 1}`}
+              {i === 0 && !this.onTestNet
+                ? 'Trezor (Default)'
+                : i === 0
+                ? 'Trezor (TestNet Default)'
+                : `Account #${i + 1}`}
             </span>
           </div>
         }
@@ -189,7 +208,13 @@ export class TrezorKeystoreCreationForm extends Component {
   }
   render() {
     const { renderContainer, renderItem } = this;
-    const { hdPath, customPath: custom, error, loading, useCustom } = this.state;
+    const {
+      hdPath,
+      customPath: custom,
+      error,
+      loading,
+      useCustom
+    } = this.state;
 
     const { classes } = this.props;
     return (
@@ -197,7 +222,9 @@ export class TrezorKeystoreCreationForm extends Component {
         <Grid container alignItems="center" alignContent="center" spacing={24}>
           <Grid item xs={12} md={12}>
             <FormControl>
-              <FormLabel component="legend">Select HD derivation Path</FormLabel>
+              <FormLabel component="legend">
+                Select HD derivation Path
+              </FormLabel>
               <RadioGroup
                 className={classes.radioGroup}
                 aria-label="ledger-hdpath"
@@ -231,7 +258,12 @@ export class TrezorKeystoreCreationForm extends Component {
           <TrezorContainer
             expect={{ kdPath: !useCustom ? hdPath : custom }}
             renderError={this.renderError}
-            getAddresses={props => <TrezorAddressList {...props} {...{ renderContainer, renderItem }} />}
+            getAddresses={props => (
+              <TrezorAddressList
+                {...props}
+                {...{ renderContainer, renderItem }}
+              />
+            )}
           />
         )}
       </div>
@@ -242,11 +274,11 @@ export class TrezorKeystoreCreationForm extends Component {
 TrezorKeystoreCreationForm.propTypes = {
   formData: PropTypes.object.isRequired,
   formChange: PropTypes.func.isRequired,
-  showBalances: PropTypes.bool,
+  showBalances: PropTypes.bool
 };
 
 TrezorKeystoreCreationForm.defaultProps = {
-  showBalances: false,
+  showBalances: false
 };
 
 export default withStyles(styles)(TrezorKeystoreCreationForm);
