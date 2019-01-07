@@ -12,7 +12,7 @@ module.exports = [
     color: 'yellow',
   },
   {
-    address: '0x0825c96db02b08dce25c67037d68b8bf83593e71',
+    address: '0x987363d88854f9e4403f3a680d03afe388f1b787',
     symbol: 'DGD',
     default: true,
     decimals: 9,
