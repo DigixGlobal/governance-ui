@@ -3,16 +3,16 @@ const DEFAULT_NETWORKS = require(`../config/networks.${environment}.config.js`);
 
 module.exports = [
   {
-    address: '0x0825c96db02b08dce25c67037d68b8bf83593e71',
+    address: '0x987363d88854f9e4403f3a680d03afe388f1b787',
     symbol: 'DGX',
     default: true,
     decimals: 9,
-    network: 'eth-mainnet',
+    network: 'eth-kovan',
     name: 'Digix Gold Grams',
     color: 'yellow',
   },
   {
-    address: '0x0825c96db02b08dce25c67037d68b8bf83593e71',
+    address: '0x6d7c12789e70b1edef80a8d01faa7b1c20587ccb',
     symbol: 'DGD',
     default: true,
     decimals: 9,
@@ -21,40 +21,12 @@ module.exports = [
     color: 'blue',
   },
   {
-    address: '0x0aab3aa38399040791600ad395c3fab82bf5ed0b',
+    address: '0x1f19249eca1759dc8120398a6ba5b8edd8e5ddd0',
     symbol: 'DGDb',
     default: true,
     decimals: 9,
     network: 'eth-kovan',
     name: 'Digix Governance Tokens',
     color: 'blue',
-  },
-  {
-    address: '0x0825c96db02b08dce25c67037d68b8bf83593e71',
-    symbol: 'DGD',
-    default: true,
-    decimals: 9,
-    network: 'testrpc',
-    name: 'Digix Governance Tokens',
-    color: 'blue',
-  },
-
-  {
-    address: '0x0000000000000000000000000000000000000000',
-    symbol: 'DGDb',
-    default: true,
-    decimals: 0,
-    network: 'testrpc',
-    name: 'Digix Governance Badges',
-    color: 'green',
-  },
-  {
-    address: '0x0825c96db02b08dce25c67037d68b8bf83593e71',
-    symbol: 'DAI',
-    default: true,
-    decimals: 18,
-    network: 'eth-mainnet',
-    name: 'DAI Stablecoin',
-    color: 'yellow',
   },
 ];
