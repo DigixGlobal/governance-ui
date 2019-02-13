@@ -164,6 +164,11 @@ class TransactionSigningOverlay extends Component {
   };
 
   handleSetLoading(loading, signingAction) {
+    const { logTxn } = this.props.data;
+    if (loading && logTxn) {
+      logTxn.sign();
+    }
+
     this.setState({ loading, signingAction });
   }
 
@@ -183,7 +188,13 @@ class TransactionSigningOverlay extends Component {
     this.setState(defaultState);
     this.props.hideTxSigningModal({ error: 'Could not find Address' });
   }
+
   handleCancel() {
+    const { logTxn } = this.props.data;
+    if (logTxn) {
+      logTxn.cancel();
+    }
+
     this.setState(defaultState);
     this.props.hideTxSigningModal({ error: 'Cancelled Signing' });
   }
@@ -199,7 +210,9 @@ class TransactionSigningOverlay extends Component {
       return null;
     }
 
-    const { network, address, txData, ui } = data;
+    const { network, address, txData, ui, logTxn } = data;
+    const logToggleDetails = logTxn && logTxn.toggleDetails ? logTxn.toggleDetails : undefined;
+
     const { keystore } = address;
     const {
       autoBroadcast,
@@ -241,6 +254,7 @@ class TransactionSigningOverlay extends Component {
             </Grid>
             <Grid item xs={12}>
               <TransactionInfo
+                logToggleDetails={logToggleDetails}
                 {...{ address, ui, txData: newTxData, network }}
               />
             </Grid>
@@ -251,6 +265,7 @@ class TransactionSigningOverlay extends Component {
                     {...{ network, address, txData: newTxData }}
                     setLoading={this.handleSetLoading}
                     hideTxSigningModal={this.handleSign}
+                    logTxn={logTxn}
                   />
                   <Button
                     variant="outlined"
@@ -259,6 +274,10 @@ class TransactionSigningOverlay extends Component {
                     disableTouchRipple
                     onClick={e => {
                       e.preventDefault();
+                      if (logTxn) {
+                        logTxn.toggleAdvanced(!openAdvanced);
+                      }
+
                       this.setState({ openAdvanced: !openAdvanced });
                     }}
                   >

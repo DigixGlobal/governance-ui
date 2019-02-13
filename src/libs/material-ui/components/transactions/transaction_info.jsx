@@ -8,21 +8,42 @@ export default class TransactionInfo extends Component {
   static propTypes = {
     ui: PropTypes.object,
     txData: PropTypes.object.isRequired,
+    logToggleDetails: PropTypes.func,
   }
+
   static defaultProps = {
     ui: undefined,
+    logToggleDetails: undefined,
   }
+
   render() {
-    const { ui, txData } = this.props;
-    const defaultRender = <TransactionInfoTable {...{ txData }} open />;
-    if (!ui) { return defaultRender; }
+    const { logToggleDetails, ui, txData } = this.props;
+
+    const defaultRender = (
+      <TransactionInfoTable
+        open
+        logToggleDetails={logToggleDetails}
+        {...{ txData }}
+      />
+    );
+
+    if (!ui) {
+      return defaultRender;
+    }
+
     const uiEntry = getUI(ui.type);
-    if (!uiEntry || !uiEntry.component) { return defaultRender; }
+    if (!uiEntry || !uiEntry.component) {
+      return defaultRender;
+    }
+
     const TransactionUI = uiEntry.component;
     return (
       <div>
         <TransactionUI {...this.props} />
-        <TransactionInfoTable {...{ txData }} />
+        <TransactionInfoTable
+          logToggleDetails={logToggleDetails}
+          {...{ txData }}
+        />
       </div>
     );
   }
