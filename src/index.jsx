@@ -6,17 +6,9 @@ import { Provider } from 'react-redux';
 import '@digix/governance-ui-components/src/global-styles';
 
 import './helpers/offlinePlugin';
-import uiMapper from './helpers/uiMapper';
-
-// import 'semantic-ui-less/semantic.less';
-
-import SpectrumConfig from '../spectrum.config';
 
 const renderApp = () => {
   /* eslint-disable global-require */
-  const { uiLibrary } = SpectrumConfig;
-
-  const loadedUi = uiMapper(uiLibrary);
 
   const NewApp = require('~/libs/material-ui/components/app').default; //loadedUi.component;
   const store = require('./store').default;
@@ -24,7 +16,7 @@ const renderApp = () => {
   render(
     <AppContainer>
       <Provider store={store}>
-        <NewApp theme={uiLibrary.theme} />
+        <NewApp />
       </Provider>
     </AppContainer>,
     document.getElementById('app')
