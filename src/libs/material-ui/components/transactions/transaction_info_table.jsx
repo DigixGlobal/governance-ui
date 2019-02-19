@@ -41,14 +41,19 @@ class TransactionInfoTable extends Component {
     open: PropTypes.bool,
     txData: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
+    logToggleDetails: PropTypes.func,
   };
+
   static defaultProps = {
     open: false,
+    logToggleDetails: undefined,
   };
+
   constructor(props) {
     super(props);
     this.state = { open: false };
   }
+
   renderTable() {
     const { txData } = this.props;
     return (
@@ -85,6 +90,11 @@ class TransactionInfoTable extends Component {
             className={classes.button}
             onClick={(e) => {
               e.preventDefault();
+              const { logToggleDetails } = this.props;
+              if (logToggleDetails) {
+                logToggleDetails(!open);
+              }
+
               this.setState({ open: !open });
             }}
           >

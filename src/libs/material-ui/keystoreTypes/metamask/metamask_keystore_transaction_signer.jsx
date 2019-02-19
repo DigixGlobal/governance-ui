@@ -14,6 +14,12 @@ const styles = theme => ({
   },
 });
 
+const ERROR_MESSAGES = {
+  shouldBeInMainnet: 'MetaMask should be in Mainnet!',
+  shouldBeInKovan: 'MetaMask should be in Kovan Network!',
+  shouldBeInRpc: 'MetaMask should be in your Custom RPC Network!',
+};
+
 class MetaMaskTransactionSigner extends Component {
   constructor(props) {
     super(props);
@@ -24,17 +30,30 @@ class MetaMaskTransactionSigner extends Component {
     const throwErr = (error) => {
       this.props.setLoading(false);
       this.setState({ error });
+      const { logTxn } = this.props;
+      if (logTxn) {
+        logTxn.completeTransaction(false, error);
+      }
     };
     try {
-      const { txData } = this.props;
+      const { logTxn, txData } = this.props;
       window.web3.version.getNetwork((err, netId) => {
         const environment = process.env.ENVIRONMENT;
         if (environment === 'production' && netId !== '1') {
-          this.props.hideTxSigningModal({ error: 'MetaMask should be in Mainnet!' });
+          if (logTxn) {
+            logTxn.completeTransaction(false, ERROR_MESSAGES.shouldBeInMainnet);
+          }
+          this.props.hideTxSigningModal({ error: ERROR_MESSAGES.shouldBeInMainnet });
         } else if ((environment === 'kovan' || environment === 'demo') && netId !== '42') {
-          this.props.hideTxSigningModal({ error: 'MetaMask should be in Kovan Network!' });
+          if (logTxn) {
+            logTxn.completeTransaction(false, ERROR_MESSAGES.shouldBeInKovan);
+          }
+          this.props.hideTxSigningModal({ error: ERROR_MESSAGES.shouldBeInKovan });
         } else if (environment === 'development' && netId < 10000000) {
-          this.props.hideTxSigningModal({ error: 'MetaMask should be in your Custom RPC Network!' });
+          if (logTxn) {
+            logTxn.completeTransaction(false, ERROR_MESSAGES.shouldBeInRpc);
+          }
+          this.props.hideTxSigningModal({ error: ERROR_MESSAGES.shouldBeInRpc });
         } else {
           window.web3.eth.sendTransaction(txData, (sendTransactionError, txHash) => {
             const result = sendTransactionError ? { error: sendTransactionError } : txHash;
@@ -79,6 +98,11 @@ MetaMaskTransactionSigner.propTypes = {
   hideTxSigningModal: PropTypes.func.isRequired,
   txData: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
+  logTxn: PropTypes.object,
+};
+
+MetaMaskTransactionSigner.defaultProps = {
+  logTxn: undefined,
 };
 
 export default withStyles(styles)(MetaMaskTransactionSigner);

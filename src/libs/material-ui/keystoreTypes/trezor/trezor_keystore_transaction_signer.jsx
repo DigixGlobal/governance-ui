@@ -35,6 +35,10 @@ class TrezorKeystoreTransactionSigner extends Component {
       .catch((error) => {
         setTimeout(() => {
           this.setState({ error });
+          const { logTxn } = this.props;
+          if (logTxn) {
+            logTxn.completeTransaction(false, `Trezor Error - ${error}`);
+          }
         }, 100);
       });
   }
@@ -78,6 +82,11 @@ TrezorKeystoreTransactionSigner.propTypes = {
   address: PropTypes.object.isRequired,
   txData: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
+  logTxn: PropTypes.object,
+};
+
+TrezorKeystoreTransactionSigner.defaultProps = {
+  logTxn: undefined,
 };
 
 export default withStyles(styles)(TrezorKeystoreTransactionSigner);

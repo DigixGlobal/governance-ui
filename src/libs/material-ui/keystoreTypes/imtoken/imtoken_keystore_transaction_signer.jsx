@@ -15,7 +15,12 @@ export default class ImTokenKestoreTransactionSigner extends Component {
     const throwErr = (error) => {
       this.props.setLoading(false);
       this.setState({ error });
+      const { logTxn } = this.props;
+      if (logTxn) {
+        logTxn.completeTransaction(false, error);
+      }
     };
+
     try {
       const localWeb3 = new Web3(window.web3.currentProvider);
       const { txData } = this.props;
@@ -49,4 +54,9 @@ ImTokenKestoreTransactionSigner.propTypes = {
   setLoading: PropTypes.func.isRequired,
   hideTxSigningModal: PropTypes.func.isRequired,
   txData: PropTypes.object.isRequired,
+  logTxn: PropTypes.object,
+};
+
+ImTokenKestoreTransactionSigner.defaultProps = {
+  logTxn: undefined,
 };
