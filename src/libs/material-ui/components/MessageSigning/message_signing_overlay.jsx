@@ -155,7 +155,7 @@ class MessageSigningOverlay extends Component {
         )}
       >
         <DialogTitle id="alert-dialog-title" classes={{ root: classes.title }}>
-          Sign Message
+          Sign Proof of Control
         </DialogTitle>
         <DialogContent>
           {!signedTx ? (
