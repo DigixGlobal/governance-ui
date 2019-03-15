@@ -10,6 +10,9 @@ const styles = {
     color: '#4CAF50',
   },
 };
+
+const CANCEL_SIGNING_ERROR = '6985';
+
 class LedgerKeystoreTransactionSigner extends Component {
   constructor(props) {
     super(props);
@@ -24,14 +27,21 @@ class LedgerKeystoreTransactionSigner extends Component {
       .then((signedTx) => {
         hideTxSigningModal({ signedTx });
       })
-      .catch(error => this.setState({ error }));
+      .catch((error) => {
+        this.setState({ error });
+        const { logTxn } = this.props;
+        if (logTxn) {
+          logTxn.completeTransaction(false, `Ledger Error - ${error}`);
+        }
+      });
   }
   renderError() {
     const { error } = this.state;
-    if (error.includes('6985')) {
+    if (error.includes(CANCEL_SIGNING_ERROR)) {
       this.props.hideTxSigningModal({ error: 'Cancelled Signing' });
       return null;
     }
+
     return <Typography color="error">{`Ledger Error - ${error}`}</Typography>;
   }
   render() {
@@ -71,6 +81,11 @@ LedgerKeystoreTransactionSigner.propTypes = {
   address: PropTypes.object.isRequired,
   txData: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
+  logTxn: PropTypes.object,
+};
+
+LedgerKeystoreTransactionSigner.defaultProps = {
+  logTxn: undefined,
 };
 
 export default withStyles(styles)(LedgerKeystoreTransactionSigner);

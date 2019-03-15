@@ -72,6 +72,11 @@ class V3KestoreTransactionSigner extends Component {
       const throwErr = error => {
         this.props.setLoading(false, this.signingButton);
         this.setState({ error });
+
+        const { logTxn } = this.props;
+        if (logTxn) {
+          logTxn.completeTransaction(false, error.message);
+        }
       };
       try {
         const { address, txData } = this.props;
@@ -151,7 +156,12 @@ V3KestoreTransactionSigner.propTypes = {
   hideTxSigningModal: PropTypes.func.isRequired,
   address: PropTypes.object.isRequired,
   txData: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  logTxn: PropTypes.object,
+};
+
+V3KestoreTransactionSigner.defaultProps = {
+  logTxn: undefined,
 };
 
 export default withStyles(styles)(V3KestoreTransactionSigner);

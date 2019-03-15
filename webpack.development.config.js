@@ -25,5 +25,6 @@ module.exports = config => ({
   ]),
   entry: [
     'react-hot-loader/patch',
+    // 'webpack-dev-server/client?https://localhost:3000',
   ].concat(config.entry),
 });
