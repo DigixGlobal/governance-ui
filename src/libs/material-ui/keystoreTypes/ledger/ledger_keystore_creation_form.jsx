@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import LedgerContianer from '@digix/react-ledger-container';
+import LedgerContainer from '@digix/react-ledger-container';
 import MuiTable from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
@@ -92,13 +92,9 @@ class LedgerKeystoreCreationForm extends Component {
   handleRadioUpdate(e) {
     const path = e.target.value;
     if (!preSelectedPaths.includes(path)) {
-      // setTimeout(() => {
       this.setState({ customPath: path, useCustom: true, loading: true });
-      // }, 10);
     } else {
-      // setTimeout(() => {
       this.setState({ hdPath: path, useCustom: false, loading: true });
-      // }, 10);
     }
 
     setTimeout(() => {
@@ -155,6 +151,7 @@ class LedgerKeystoreCreationForm extends Component {
 
     const options = this.paths.map((path, i) => (
       <FormControlLabel
+        key={`preselected-${i}`}
         value={path}
         control={<Radio />}
         classes={{ label: classes.radio }}
@@ -176,9 +173,6 @@ class LedgerKeystoreCreationForm extends Component {
   render() {
     const { renderContainer, renderItem } = this;
     const { hdPath, customPath: custom, error, loading, useCustom } = this.state;
-
-    // let { hdPath } = this.state;
-    // if (hdPath === defaultPath) hdPath = customPath;
     const { classes } = this.props;
     // TODO manage 'edit' mode (without ledger)
     return (
@@ -205,7 +199,6 @@ class LedgerKeystoreCreationForm extends Component {
                       error={error}
                       autoFocus
                       onChange={this.handleUpdatePath}
-                      // fullWidth
                       placeholder="Enter HD path"
                       helperText="Ledger Live/Custom Wallet HD path"
                     />
@@ -213,13 +206,12 @@ class LedgerKeystoreCreationForm extends Component {
                 />
               </RadioGroup>
             </FormControl>
-            {/* <TextField label="Name" placeholder="Address nickname" onChange={this.handleUpdatePassword} fullWidth /> */}
           </Grid>
         </Grid>
         {!loading && (
           <Typography color="error" component="div">
-            <LedgerContianer
-              expect={!useCustom ? hdPath : custom}
+            <LedgerContainer
+              expect={!useCustom ? { kdPath: hdPath } : custom}
               renderReady={props => (
                 <LedgerAddressList kdPath={!useCustom ? hdPath : custom} {...props} {...{ renderContainer, renderItem }} />
               )}
@@ -232,6 +224,7 @@ class LedgerKeystoreCreationForm extends Component {
 }
 
 LedgerKeystoreCreationForm.propTypes = {
+  classes: PropTypes.object.isRequired,
   formData: PropTypes.object.isRequired,
   formChange: PropTypes.func.isRequired,
   showBalances: PropTypes.bool,

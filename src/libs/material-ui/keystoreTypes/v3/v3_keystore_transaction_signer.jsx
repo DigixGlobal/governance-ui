@@ -1,38 +1,35 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { Form, Input } from 'semantic-ui-react';
 
 import Input from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-
+import { withStyles } from '@material-ui/core/styles';
 import signTx from './v3_sign_tx';
 
 const styles = theme => ({
   root: {
     display: 'flex',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   form: {
-    width: '98%'
+    width: '98%',
   },
   rightIcon: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing.unit,
   },
   margin: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
   },
   withoutLabel: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing.unit * 3,
   },
   textField: {
     width: '100%',
-    marginTop: '2rem'
-  }
+    marginTop: '2rem',
+  },
 });
 
 class V3KestoreTransactionSigner extends Component {
@@ -69,7 +66,7 @@ class V3KestoreTransactionSigner extends Component {
     this.setState({ error: false });
 
     setTimeout(() => {
-      const throwErr = error => {
+      const throwErr = (error) => {
         this.props.setLoading(false, this.signingButton);
         this.setState({ error });
 
@@ -120,7 +117,7 @@ class V3KestoreTransactionSigner extends Component {
                   id="name-simple"
                   value={password}
                   type="password"
-                  error={error}
+                  error={!!error}
                   onChange={this.handleChange}
                   autoFocus
                   fullWidth
@@ -128,7 +125,6 @@ class V3KestoreTransactionSigner extends Component {
                   helperText="Enter your Password to Sign your Transaction"
                 />
               </FormControl>
-              {/* <TextField label="Name" placeholder="Address nickname" onChange={this.handleUpdatePassword} fullWidth /> */}
             </Grid>
           </Grid>
           {error && (
