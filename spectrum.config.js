@@ -3,7 +3,7 @@
 // const digix = require('./src/themes/material-ui/digix');
 
 const NETWORKS =
-  (process.env.ENVIRONMENT === 'production' && 'eth-kovan') ||
+  (process.env.ENVIRONMENT === 'production' && 'eth-mainnet') ||
   (process.env.ENVIRONMENT === 'kovan' && 'eth-kovan') ||
   'testrpc';
 
