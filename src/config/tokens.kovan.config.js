@@ -3,7 +3,7 @@ const DEFAULT_NETWORKS = require(`../config/networks.${environment}.config.js`);
 
 module.exports = [
   {
-    address: '0x693df01689a820ff7f907672ce7973d412c84419',
+    address: '0xcb010731f19680a4559445d7d8694d729e95d6f0',
     symbol: 'DGX',
     default: true,
     decimals: 9,
@@ -12,7 +12,7 @@ module.exports = [
     color: 'yellow',
   },
   {
-    address: '0xca0fbad3be0627553059d5429ac1d765b46eb079',
+    address: '0x3bbba4b50468ead87cfc90a31c2768b7bf4d26e1',
     symbol: 'DGD',
     default: true,
     decimals: 9,
@@ -21,7 +21,7 @@ module.exports = [
     color: 'blue',
   },
   {
-    address: '0xc2179bba7d9515417c56638a7b1f208f23b13d23',
+    address: '0x1ed8364eaabf655882dca0c01b19519f8acaed0b',
     symbol: 'DGDb',
     default: true,
     decimals: 9,
