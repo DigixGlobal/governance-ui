@@ -1,5 +1,5 @@
 module.exports = {
-  GATEWAY: 'https://ipfs.infura.io/ipfs',
-  ENDPOINT: 'https://ipfs.infura.io:5001',
+  GATEWAY: 'https://ipfs.digix.global/ipfs',
+  ENDPOINT: 'https://ipfs-api.digix.global',
   CONFIG: { host: 'ipfs.infura.io', protocol: 'https' },
 };
