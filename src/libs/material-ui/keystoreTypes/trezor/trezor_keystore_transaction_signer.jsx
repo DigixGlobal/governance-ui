@@ -8,8 +8,8 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
   success: {
-    color: '#4CAF50',
-  },
+    color: '#4CAF50'
+  }
 };
 
 class TrezorKeystoreTransactionSigner extends Component {
@@ -21,18 +21,20 @@ class TrezorKeystoreTransactionSigner extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return !_.isEqual(nextState, this.state) || !_.isEqual(nextProps, this.props);
+    return (
+      !_.isEqual(nextState, this.state) || !_.isEqual(nextProps, this.props)
+    );
   }
 
   handleSign({ signTransaction }) {
     const { txData, address, hideTxSigningModal } = this.props;
     const { kdPath } = address;
     signTransaction(kdPath, txData, hideTxSigningModal)
-      .then((signedTx) => {
+      .then(signedTx => {
         this.setState({ signed: true });
         hideTxSigningModal({ signedTx });
       })
-      .catch((error) => {
+      .catch(error => {
         setTimeout(() => {
           this.setState({ error });
           const { logTxn } = this.props;
@@ -64,10 +66,18 @@ class TrezorKeystoreTransactionSigner extends Component {
             <Typography align="center">
               <Fingerprint classes={{ root: classes.success }} />
             </Typography>
-            <Typography variant="body2" align="center" className={classes.success}>
+            <Typography
+              variant="body2"
+              align="center"
+              className={classes.success}
+            >
               Ready to Sign Transaction
             </Typography>
-            <Typography variant="body2" align="center" className={classes.success}>
+            <Typography
+              variant="body2"
+              align="center"
+              className={classes.success}
+            >
               Please follow instructions on your Trezor Wallet
             </Typography>
           </Fragment>
@@ -82,11 +92,11 @@ TrezorKeystoreTransactionSigner.propTypes = {
   address: PropTypes.object.isRequired,
   txData: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  logTxn: PropTypes.object,
+  logTxn: PropTypes.object
 };
 
 TrezorKeystoreTransactionSigner.defaultProps = {
-  logTxn: undefined,
+  logTxn: undefined
 };
 
 export default withStyles(styles)(TrezorKeystoreTransactionSigner);

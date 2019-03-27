@@ -1,33 +1,58 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Message } from 'semantic-ui-react';
-
+import Typography from '@material-ui/core/Typography';
 import TrezorContainer from '@digix/react-trezor-container';
+import _ from 'lodash';
 
 export default class TrezorKeystoreMessageSigner extends Component {
   constructor(props) {
     super(props);
-    this.handleSign = this.handleSign.bind(this);
     this.state = { signed: false };
+    this.handleSign = this.handleSign.bind(this);
+    this.renderError = this.renderError.bind(this);
   }
 
-  shouldComponentUpdate() {
-    return false;
+  shouldComponentUpdate(nextProps, nextState) {
+    return !_.isEqual(nextState, this.state);
   }
-
   handleSign({ signMessage }) {
     const { txData, address, hideMsgSigningModal } = this.props;
     const { kdPath } = address;
 
-    signMessage(kdPath, txData.message).then(signedTx => {
-      this.setState({ signed: true });
-      hideMsgSigningModal({ signedTx });
-    });
+    signMessage(kdPath, txData.message)
+      .then(signedTx => {
+        this.setState({ signed: true });
+        hideMsgSigningModal({ signedTx });
+      })
+      .catch(error => {
+        setTimeout(() => {
+          this.setState({ error });
+          const { logTxn } = this.props;
+          if (logTxn) {
+            logTxn.completeTransaction(false, `Trezor Error - ${error}`);
+          }
+        }, 100);
+      });
+  }
+
+  renderError() {
+    const { error } = this.state;
+    return (
+      <Typography color="error">
+        <br />
+        {`Trezor Error - ${error}`}
+      </Typography>
+    );
   }
 
   render() {
     const { kdPath, address } = this.props.address;
-    const { signed } = this.state;
+    const { signed, error } = this.state;
+    if (error) {
+      return this.renderError();
+    }
+
     return (
       <TrezorContainer
         expect={{ kdPath, address }}
