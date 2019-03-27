@@ -185,6 +185,7 @@ export class TrezorKeystoreCreationForm extends Component {
 
     const options = this.paths.map((path, i) => (
       <FormControlLabel
+        key={`label-${i + 1}`}
         value={path}
         control={<Radio />}
         classes={{ label: classes.radio }}

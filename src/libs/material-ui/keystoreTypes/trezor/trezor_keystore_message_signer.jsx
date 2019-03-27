@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Message } from 'semantic-ui-react';
+
 import TrezorContainer from '@digix/react-trezor-container';
 
 export default class TrezorKeystoreMessageSigner extends Component {
@@ -9,14 +10,21 @@ export default class TrezorKeystoreMessageSigner extends Component {
     this.handleSign = this.handleSign.bind(this);
     this.state = { signed: false };
   }
+
+  shouldComponentUpdate() {
+    return false;
+  }
+
   handleSign({ signMessage }) {
     const { txData, address, hideMsgSigningModal } = this.props;
     const { kdPath } = address;
+
     signMessage(kdPath, txData.message).then(signedTx => {
       this.setState({ signed: true });
       hideMsgSigningModal({ signedTx });
     });
   }
+
   render() {
     const { kdPath, address } = this.props.address;
     const { signed } = this.state;
