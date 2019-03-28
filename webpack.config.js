@@ -81,7 +81,7 @@ const baseConfig = {
       },
       {
         test: /\.(js|jsx)$/,
-        exclude: /actioncable/,
+        exclude: [/actioncable/,/ethjs-unit/],
         include: [
           // TODO auto detect es6 modules?
           // TODO replace with dapplet system
