@@ -4,6 +4,8 @@ import _ from 'lodash';
 import TrezorContainer from '@digix/react-trezor-container';
 import Typography from '@material-ui/core/Typography';
 import Fingerprint from '@material-ui/icons/Fingerprint';
+import Button from '@material-ui/core/Button';
+
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
@@ -16,7 +18,7 @@ class TrezorKeystoreTransactionSigner extends Component {
   constructor(props) {
     super(props);
     this.handleSign = this.handleSign.bind(this);
-    this.state = { signed: false, error: false };
+    this.state = { signed: false, error: false, signing: false };
     this.renderError = this.renderError.bind(this);
   }
 
@@ -48,19 +50,51 @@ class TrezorKeystoreTransactionSigner extends Component {
     const { error } = this.state;
     return <Typography color="error">{`Trezor Error - ${error}`}</Typography>;
   }
+
+  renderInitSigning = () => {
+    const handleInitiateSigning = () => {
+      this.props.hideAdvancedTab();
+      this.setState({ signing: true });
+    };
+
+    const buttonStyle = {
+      display: 'block',
+      margin: '0 auto'
+    };
+
+    return (
+      <Fragment>
+        <p>
+          You can modify the transaction details using the <b>Advanced</b> tab
+          below. Once you are satisfied with the details, please click{' '}
+          <b>Sign Transaction</b>
+          to confirm the transaction with your ledger device.
+        </p>
+        <Button
+          variant="outlined"
+          onClick={handleInitiateSigning}
+          style={buttonStyle}
+        >
+          Sign Transaction
+        </Button>
+      </Fragment>
+    );
+  };
+
   render() {
     const { kdPath, address } = this.props.address;
     const { classes } = this.props;
-    const { error } = this.state;
+    const { error, signed, signing } = this.state;
     if (error) {
       return this.renderError();
     }
-    const { signed } = this.state;
     return (
       <TrezorContainer
         expect={{ kdPath, address }}
         onReady={this.handleSign}
+        renderInitSigning={this.renderInitSigning}
         signed={signed}
+        signing={signing}
         renderReady={() => (
           <Fragment>
             <Typography align="center">
