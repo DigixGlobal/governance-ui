@@ -68,7 +68,7 @@ class TrezorKeystoreTransactionSigner extends Component {
           You can modify the transaction details using the <b>Advanced</b> tab
           below. Once you are satisfied with the details, please click{' '}
           <b>Sign Transaction</b>
-          to confirm the transaction with your ledger device.
+          to confirm the transaction with your Trezor device.
         </p>
         <Button
           variant="outlined"
