@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-// import ErrorMessage from '~/components/common/error_message';
-
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const styles = theme => ({
+const styles = () => ({
   card: {
     backgroundColor: '#eee',
   },
@@ -23,10 +21,14 @@ const ERROR_MESSAGES = {
 class MetaMaskTransactionSigner extends Component {
   constructor(props) {
     super(props);
-    this.state = { error: false };
+    this.state = {
+      error: false,
+    };
   }
 
   componentDidMount() {
+    this.props.hideAdvancedTab();
+
     const throwErr = (error) => {
       this.props.setLoading(false);
       this.setState({ error });
@@ -35,6 +37,7 @@ class MetaMaskTransactionSigner extends Component {
         logTxn.completeTransaction(false, error);
       }
     };
+
     try {
       const { logTxn, txData } = this.props;
       window.web3.version.getNetwork((err, netId) => {
@@ -67,7 +70,6 @@ class MetaMaskTransactionSigner extends Component {
   }
 
   render() {
-    const { error } = this.state;
     const { classes } = this.props;
     return (
       <div style={{ marginTop: '1em' }}>
@@ -75,20 +77,10 @@ class MetaMaskTransactionSigner extends Component {
           <CardHeader
             avatar={<CircularProgress />}
             title="Waiting MetaMask Transaction Confirmation"
-            subheader="Please confirm your transaction in MetaMask. If you wish to cancel, click the &quot;Cancel&quot; button in MetaMask."
+            subheader="Please confirm your transaction in MetaMask. If you wish to cancel, click the &quot;Reject&quot; button in MetaMask."
           />
         </Card>
       </div>
-      // <div>
-      //   <Message icon>
-      //     <CircularProgress /* className={classes.progress} */ />
-      //     <Message.Content>
-      //       <Message.Header>Waiting MetaMask Transaction Confirmation</Message.Header>
-      //       Please confirm your transaction in MetaMask. If you wish to cancel, click the "Cancel" button in MetaMask.
-      //     </Message.Content>
-      //   </Message>
-      //   {error && <ErrorMessage content={error} />}
-      // </div>
     );
   }
 }
@@ -96,6 +88,7 @@ class MetaMaskTransactionSigner extends Component {
 MetaMaskTransactionSigner.propTypes = {
   setLoading: PropTypes.func.isRequired,
   hideTxSigningModal: PropTypes.func.isRequired,
+  hideAdvancedTab: PropTypes.func.isRequired,
   txData: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   logTxn: PropTypes.object,
