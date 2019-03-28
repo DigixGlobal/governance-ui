@@ -395,9 +395,11 @@ class TransactionSigningOverlay extends Component {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button color="primary" onClick={this.handleCancel}>
-            Cancel Signing
-          </Button>
+          {this.state.showAdvancedTab && (
+            <Button color="primary" onClick={this.handleCancel}>
+              Cancel Signing
+            </Button>
+          )}
           {signingAction && !loading && signingAction()}
         </DialogActions>
       </Dialog>
