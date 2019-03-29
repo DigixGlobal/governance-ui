@@ -1,5 +1,12 @@
+
+import { getContract } from '../helpers/contracts';
+
 const environment = process.env.ENVIRONMENT || 'development';
 const DEFAULT_NETWORKS = require(`../config/networks.${environment}.config.js`); // eslint-disable-line
+const kovanToken = getContract('dgd', DEFAULT_NETWORKS, 'eth-kovan');
+const testRpcToken = getContract('dgd', DEFAULT_NETWORKS, 'testrpc');
+
+
 
 module.exports = [
   {
@@ -21,7 +28,7 @@ module.exports = [
     color: 'blue',
   },
   {
-    address: '0x0825c96db02b08dce25c67037d68b8bf83593e71',
+    address: kovanToken.address,
     symbol: 'DGD',
     default: true,
     decimals: 9,
@@ -48,22 +55,12 @@ module.exports = [
     color: 'yellow',
   },
   {
-    address: '0x0825c96db02b08dce25c67037d68b8bf83593e71',
+    address: testRpcToken.address,
     symbol: 'DGD',
     default: true,
     decimals: 9,
     network: 'testrpc',
     name: 'Digix Governance Tokens',
     color: 'blue',
-  },
-
-  {
-    address: '0x0825c96db02b08dce25c67037d68b8bf83593e71',
-    symbol: 'DAI',
-    default: true,
-    decimals: 18,
-    network: 'eth-mainnet',
-    name: 'DAI Stablecoin',
-    color: 'yellow',
   },
 ];
