@@ -1,8 +1,9 @@
+/* eslint-disable react/jsx-no-duplicate-props */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
-// import { Divider, Modal, Button, Dimmer, Loader } from 'semantic-ui-react';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -22,7 +23,6 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
-// import Divider from '@material-ui/core/Divider';
 
 import { getSigningModalData } from '~/selectors';
 import { hideTxSigningModal } from '~/actions/session';
@@ -30,7 +30,6 @@ import { hideTxSigningModal } from '~/actions/session';
 import { getKeystoreComponent } from '../../keystoreTypes';
 
 import TransactionInfo from './transaction_info';
-import Advanced from '../common/advanced';
 
 const defaultState = {
   loading: false,
@@ -38,7 +37,8 @@ const defaultState = {
   signedTx: null,
   signingAction: undefined,
   openAdvanced: false,
-  gasPrice: 20
+  gasPrice: 20,
+  showAdvancedTab: true,
 };
 
 const styles = theme => ({
@@ -129,15 +129,18 @@ const styles = theme => ({
     marginTop: '1em'
   }
 });
+
 class TransactionSigningOverlay extends Component {
   static propTypes = {
     data: PropTypes.object,
     hideTxSigningModal: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired
   };
+
   static defaultProps = {
     data: undefined
   };
+
   constructor(props) {
     super(props);
     this.state = defaultState;
@@ -176,6 +179,7 @@ class TransactionSigningOverlay extends Component {
     this.setState(defaultState);
     this.props.hideTxSigningModal(...args);
   }
+
   handleSign(...args) {
     this.handleSetLoading(false);
     if (args.error || this.state.autoBroadcast) {
@@ -184,6 +188,7 @@ class TransactionSigningOverlay extends Component {
       this.setState({ signedTx: args[0].signedTx });
     }
   }
+
   handleFailure() {
     this.setState(defaultState);
     this.props.hideTxSigningModal({ error: 'Could not find Address' });
@@ -198,14 +203,112 @@ class TransactionSigningOverlay extends Component {
     this.setState(defaultState);
     this.props.hideTxSigningModal({ error: 'Cancelled Signing' });
   }
+
   handleChange = (name, { min, max }) => event => {
     const value = parseFloat(event.target.value) || min;
     this.setState({
       [name]: value > max ? max : value
     });
   };
+
+  hideAdvancedTab = () => {
+    this.setState({ showAdvancedTab: false });
+  }
+
+  toggleAdvancedTab = (e) => {
+    e.preventDefault();
+    const { logTxn } = this.props.data;
+    const { openAdvanced } = this.state;
+
+    if (logTxn) {
+      logTxn.toggleAdvanced(!openAdvanced);
+    }
+
+    this.setState({ openAdvanced: !openAdvanced });
+  }
+
+  renderAdvancedTab() {
+    const { classes } = this.props;
+    const { gasPrice, openAdvanced, showAdvancedTab } = this.state;
+
+    if (!showAdvancedTab) {
+      return null;
+    }
+
+    const MIN_GWEI = 1;
+    const MAX_GWEI = 100;
+    const range = {
+      min: MIN_GWEI,
+      max: MAX_GWEI,
+    };
+
+    const inputProps = {
+      step: 1,
+      ...range,
+      className: classes.textField,
+    };
+
+    const classProps = {
+      classes: {
+        root: classes.textField,
+        input: classes.noBorder,
+        underline: classes.noBorder,
+      },
+    };
+
+    return (
+      <div>
+        <Button
+          className={classes.advancedBtn}
+          disableRipple
+          disableTouchRipple
+          onClick={this.toggleAdvancedTab}
+          variant="outlined"
+        >
+          Advanced
+          <ExpandMoreIcon
+            className={classnames(classes.expand, {
+              [classes.expandOpen]: openAdvanced,
+            })}
+          />
+        </Button>
+
+        <Collapse in={openAdvanced}>
+          <Card className={classes.card}>
+            <Grid container>
+              <Grid item xs={9} className={classes.noPadding}>
+                <Typography className={classes.typography}>GAS PRICE</Typography>
+              </Grid>
+              <Grid item xs={3} className={classes.voteSelection}>
+                <Typography className={classes.selected} variant="caption">
+                  <TextField
+                    inputProps={inputProps}
+                    InputProps={classProps}
+                    onChange={this.handleChange('gasPrice', range)}
+                    value={gasPrice}
+                    type="number"
+                  />
+                  &nbsp;GWEI
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <div className={classes.slider}>
+                  <Slider onUpdate={this.setGasPrice} range={range} start={[gasPrice]} step={1} />
+                  <Grid container>
+                    <Grid item xs={6} className={classes.minValue}>{MIN_GWEI}</Grid>
+                    <Grid item xs={6} className={classes.maxValue}>{MAX_GWEI}</Grid>
+                  </Grid>
+                </div>
+              </Grid>
+            </Grid>
+          </Card>
+        </Collapse>
+      </div>
+    );
+  }
+
   render() {
-    const { data, classes } = this.props;
+    const { data } = this.props;
     if (!data) {
       return null;
     }
@@ -215,13 +318,12 @@ class TransactionSigningOverlay extends Component {
 
     const { keystore } = address;
     const {
-      autoBroadcast,
       signedTx,
       signingAction,
       loading,
       gasPrice,
-      openAdvanced
     } = this.state;
+
     if (!txData || !keystore) {
       return null;
     }
@@ -229,13 +331,14 @@ class TransactionSigningOverlay extends Component {
     const { gasPrice: txGas, ...rest } = txData;
     const newTxData = {
       gasPrice: `0x${(Number(gasPrice) * 1e9).toString(16)}`,
-      ...rest
+      ...rest,
     };
 
     const SigningComponent = getKeystoreComponent({
       id: keystore.type.id,
       type: 'transactionSigner'
     });
+
     return (
       <Dialog
         open
@@ -265,89 +368,10 @@ class TransactionSigningOverlay extends Component {
                     {...{ network, address, txData: newTxData }}
                     setLoading={this.handleSetLoading}
                     hideTxSigningModal={this.handleSign}
+                    hideAdvancedTab={this.hideAdvancedTab}
                     logTxn={logTxn}
                   />
-                  <Button
-                    variant="outlined"
-                    className={classes.advancedBtn}
-                    disableRipple
-                    disableTouchRipple
-                    onClick={e => {
-                      e.preventDefault();
-                      if (logTxn) {
-                        logTxn.toggleAdvanced(!openAdvanced);
-                      }
-
-                      this.setState({ openAdvanced: !openAdvanced });
-                    }}
-                  >
-                    Advanced
-                    <ExpandMoreIcon
-                      className={classnames(classes.expand, {
-                        [classes.expandOpen]: openAdvanced
-                      })}
-                    />
-                  </Button>
-
-                  <Collapse in={openAdvanced}>
-                    <Card className={classes.card}>
-                      <Grid container>
-                        <Grid item xs={9} className={classes.noPadding}>
-                          <Typography className={classes.typography}>
-                            GAS PRICE
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={3} className={classes.voteSelection}>
-                          <Typography
-                            className={classes.selected}
-                            variant="caption"
-                          >
-                            <TextField
-                              inputProps={{
-                                step: 1,
-                                min: 1,
-                                max: 100,
-                                className: classes.textField
-                              }}
-                              type="number"
-                              value={gasPrice}
-                              /* eslint-disable react/jsx-no-duplicate-props */
-                              InputProps={{
-                                classes: {
-                                  root: classes.textField,
-                                  input: classes.noBorder,
-                                  underline: classes.noBorder
-                                }
-                              }}
-                              onChange={this.handleChange('gasPrice', {
-                                min: 1,
-                                max: 100
-                              })}
-                            />{' '}
-                            GWEI
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <div className={classes.slider}>
-                            <Slider
-                              start={[gasPrice]}
-                              onUpdate={this.setGasPrice}
-                              step={1}
-                              range={{ min: 1, max: 100 }}
-                            />
-                            <Grid container>
-                              <Grid item xs={6} className={classes.minValue}>
-                                1
-                              </Grid>
-                              <Grid item xs={6} className={classes.maxValue}>
-                                100
-                              </Grid>
-                            </Grid>
-                          </div>
-                        </Grid>
-                      </Grid>
-                    </Card>
-                  </Collapse>
+                  {this.renderAdvancedTab()}
                 </div>
               ) : (
                 <div>
@@ -371,9 +395,11 @@ class TransactionSigningOverlay extends Component {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button color="primary" onClick={this.handleCancel}>
-            Cancel Signing
-          </Button>
+          {this.state.showAdvancedTab && (
+            <Button color="primary" onClick={this.handleCancel}>
+              Cancel Signing
+            </Button>
+          )}
           {signingAction && !loading && signingAction()}
         </DialogActions>
       </Dialog>

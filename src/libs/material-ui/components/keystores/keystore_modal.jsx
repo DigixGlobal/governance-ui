@@ -54,7 +54,7 @@ const icons = {
   metamask: MetamaskIcon,
   trezor: TrezorIcon,
   ledger: LedgerIcon,
-  imtoken: ImtokenIcon,
+  imtoken: ImtokenIcon
 };
 
 class KeystoreModal extends Component {
@@ -79,7 +79,7 @@ class KeystoreModal extends Component {
     creatingKeyStore: PropTypes.bool,
     allowedKeystoreTypes: PropTypes.array,
     hideSelector: PropTypes.bool,
-    showBalances: PropTypes.bool,
+    showBalances: PropTypes.bool
   };
 
   static defaultProps = {
@@ -96,7 +96,7 @@ class KeystoreModal extends Component {
     creatingKeyStore: false,
     allowedKeystoreTypes: undefined,
     hideSelector: false,
-    showBalances: false,
+    showBalances: false
   };
   constructor(props) {
     super(props);
@@ -205,7 +205,7 @@ class KeystoreModal extends Component {
           });
         } catch (error) {
           this.setState({ loading: false, error });
-          reject();
+          return reject();
         }
         // async promise
         if (func && func.then) {
@@ -218,7 +218,8 @@ class KeystoreModal extends Component {
               this.setState({ loading: false, error });
               reject();
             });
-        } else { // sync
+        } else {
+          // sync
           const { onClose, onSuccess } = this.props;
 
           if (onClose) {
