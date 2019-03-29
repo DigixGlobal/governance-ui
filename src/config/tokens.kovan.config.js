@@ -1,5 +1,9 @@
+import { getContract } from '../helpers/contracts';
+
 const environment = process.env.ENVIRONMENT || 'development';
 const DEFAULT_NETWORKS = require(`../config/networks.${environment}.config.js`); // eslint-disable-line
+const kovanToken = getContract('dgd', DEFAULT_NETWORKS, 'eth-kovan');
+const testRpcToken = getContract('dgd', DEFAULT_NETWORKS, 'testrpc');
 
 module.exports = [
   {
@@ -12,7 +16,7 @@ module.exports = [
     color: 'yellow',
   },
   {
-    address: '0xca0fbad3be0627553059d5429ac1d765b46eb079',
+    address: kovanToken.address,
     symbol: 'DGD',
     default: true,
     decimals: 9,
