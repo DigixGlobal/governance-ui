@@ -29,9 +29,6 @@ const styles = () => ({
     width: 60,
     margin: '0 auto',
   },
-  icon: {
-    fontSize: '4em',
-  },
 });
 
 class TxVisualisation extends Component {
@@ -40,13 +37,20 @@ class TxVisualisation extends Component {
     classes: PropTypes.object.isRequired,
   };
 
-  renderItem = ({ header, item, icon: Icon, identicon, image, subheader, data, color, dataLink, noTruncate }, i) => {
+  renderItem = (item, i) => {
     const { classes } = this.props;
+    const {
+      data,
+      dataLink,
+      header,
+      identicon,
+      subheader,
+    } = item;
+
     return (
       <Grid key={i} item xs={4} md={4}>
         <Card className={classes.card}>
           {identicon && <Avatar className={classes.image} src={blockie(identicon)} />}
-          {Icon && <Icon className={classes.icon} />}
           <CardContent>
             <Typography gutterBottom variant="headline" component="h2">
               {header}

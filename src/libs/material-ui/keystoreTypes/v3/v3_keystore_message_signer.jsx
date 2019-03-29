@@ -2,45 +2,39 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
-// import { Form } from 'semantic-ui-react';
-// import { Input } from 'semantic-ui-react';
-
-import { withStyles } from '@material-ui/core/styles';
-
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Grid from '@material-ui/core/Grid';
-// import TextField from '@material-ui/core/Input';
 import Input from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
+import { withStyles } from '@material-ui/core/styles';
+import { v3SignMsg } from './v3_sign_tx';
 
 const styles = theme => ({
   root: {
     display: 'flex',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   form: {
-    width: '100%'
+    width: '100%',
   },
   rightIcon: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing.unit,
   },
   margin: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
   },
   withoutLabel: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing.unit * 3,
   },
   textField: {
     width: '100%',
-    marginTop: '2rem'
+    marginTop: '2rem',
   },
   caption: {
-    marginTop: '2rem'
-  }
+    marginTop: '2rem',
+  },
 });
-
-import { v3SignMsg } from './v3_sign_tx';
 
 function parseContent(content) {
   if (!content) {
@@ -136,7 +130,7 @@ export class V3KestoreMessageSigner extends Component {
                   id="name-simple"
                   value={this.state.password}
                   type="password"
-                  error={error}
+                  error={!!error}
                   onChange={this.handleChange}
                   autoFocus
                   fullWidth
@@ -177,7 +171,7 @@ V3KestoreMessageSigner.propTypes = {
   hideMsgSigningModal: PropTypes.func.isRequired,
   address: PropTypes.object.isRequired,
   txData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(V3KestoreMessageSigner);

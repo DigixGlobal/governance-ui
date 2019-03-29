@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Message } from 'semantic-ui-react';
-import LedgerContianer from '@digix/react-ledger-container';
+import LedgerContainer from '@digix/react-ledger-container';
 
 export default class LedgerKeystoreMessageSigner extends Component {
   constructor(props) {
@@ -18,7 +18,7 @@ export default class LedgerKeystoreMessageSigner extends Component {
   render() {
     const { kdPath, address } = this.props.address;
     return (
-      <LedgerContianer
+      <LedgerContainer
         expect={{ kdPath, address }}
         onReady={this.handleSign}
         renderReady={({ config }) => (
