@@ -10,7 +10,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const spectrumConfig = require('./spectrum.config.js');
 // if process.env.ENVIRONMENT is set, always use `production` flag, but pass the ENVIRONMENT, too.
 const environment = process.env.ENVIRONMENT; // could be 'production', 'staging' or null.
+const devEnvironment = process.env.DEV_ENVIRONMENT; // could be 'production', 'staging' or null.
+
 const production = !!environment; // if this is truthy (i.e. set, then we're good)
+
+console.log('environment = ', environment || devEnvironment);
 
 const baseConfig = {
   entry: ['./src/index.jsx'],
@@ -77,7 +81,7 @@ const baseConfig = {
       },
       {
         test: /\.(js|jsx)$/,
-        exclude: /actioncable/,
+        exclude: [/actioncable/,/ethjs-unit/],
         include: [
           // TODO auto detect es6 modules?
           // TODO replace with dapplet system
@@ -110,9 +114,10 @@ const baseConfig = {
       buildTime: JSON.stringify(new Date()),
     }),
     new CopyWebpackPlugin([{ from: './src/assets/icon.png', to: 'favicon.ico' }]),
+
     new webpack.DefinePlugin({
       'process.env': {
-        ENVIRONMENT: JSON.stringify(environment || 'development'), // staging / production / development
+        ENVIRONMENT: JSON.stringify(environment || devEnvironment || 'development'), // staging / production / development
         NODE_ENV: JSON.stringify(production ? 'production' : 'development'), // for react
       },
     }),
