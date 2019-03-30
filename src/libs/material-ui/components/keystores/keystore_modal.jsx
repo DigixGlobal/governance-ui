@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Web3 from 'web3';
 import { connect } from 'react-redux';
 import { Divider } from 'semantic-ui-react';
 
@@ -258,6 +259,23 @@ class KeystoreModal extends Component {
     this.handleClose();
   }
 
+  enableMetamask = (e) => {
+    e.preventDefault();
+    if (!window.ethereum) {
+      this.setState({ error: 'Cannot connect to MetaMask wallet. Make sure to login to your MetaMask wallet.' });
+      return;
+    }
+
+    window.web3 = new Web3(window.ethereum);
+    window.ethereum.enable()
+    .then(() => {
+      this.handleSubmit();
+    })
+    .catch(() => {
+      this.setState({ error: 'Cannot connect to MetaMask wallet. Make sure to login to your MetaMask wallet.' });
+    });
+  }
+
   render() {
     const KeystoreForm = this.props.form;
     // const handleRemove = this.props.removeFunc && this.handleRemove;
@@ -312,10 +330,7 @@ class KeystoreModal extends Component {
                 <Button
                   color="primary"
                   className={classes.button}
-                  onClick={e => {
-                    e.preventDefault();
-                    this.handleSubmit();
-                  }}
+                  onClick={this.enableMetamask}
                 >
                   Load
                   <DoneIcon className={classes.rightIcon}>send</DoneIcon>
