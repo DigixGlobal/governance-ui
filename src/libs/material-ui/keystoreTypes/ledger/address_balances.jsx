@@ -19,27 +19,43 @@ class AdressBalances extends Component {
     super(props);
     this.state = {
       ethBalance: 0,
-      tokenBalances: undefined,
+      tokenBalances: undefined
     };
   }
   componentDidMount() {
     const { address, web3Redux, tokens } = this.props;
     const { web3 } = web3Redux.networks[network];
     const tokenBalances = [];
-    tokens.map((token) => {
+    tokens.map(token => {
       const contract = web3.eth.contract(ERC20_ABI).at(token.address);
       return contract.balanceOf
         .call(address)
-        .then(balance => tokenBalances.push({ symbol: token.symbol, balance: parseBigNumber(balance, 9) }));
+        .then(balance =>
+          tokenBalances.push({
+            symbol: token.symbol,
+            balance:
+              token.symbol === 'DGDb'
+                ? parseBigNumber(balance)
+                : parseBigNumber(balance, 9)
+          })
+        );
     });
     setTimeout(() => {
-      web3.eth.getBalance(address).then(balance => this.setState({ ethBalance: parseBigNumber(balance, 18), tokenBalances }));
+      web3.eth
+        .getBalance(address)
+        .then(balance =>
+          this.setState({
+            ethBalance: parseBigNumber(balance, 18),
+            tokenBalances
+          })
+        );
     }, 100);
   }
 
   renderTokenBalances() {
     const { tokenBalances } = this.state;
-    if (!tokenBalances || tokenBalances.length === 0) return <TableCell>loading...</TableCell>;
+    if (!tokenBalances || tokenBalances.length === 0)
+      return <TableCell>loading...</TableCell>;
     const sorted = tokenBalances.sort((a, b) => {
       const left = a.symbol.toLowerCase();
       const right = b.symbol.toLowerCase();
@@ -47,7 +63,9 @@ class AdressBalances extends Component {
       if (left > right) return 1;
       return 0;
     });
-    const tokens = sorted.map(token => `${token.balance} ${token.symbol}`).join(', ');
+    const tokens = sorted
+      .map(token => `${token.balance} ${token.symbol}`)
+      .join(', ');
     return <TableCell>{tokens}</TableCell>;
   }
 
@@ -65,13 +83,15 @@ class AdressBalances extends Component {
 AdressBalances.propTypes = {
   web3Redux: PropTypes.object.isRequired,
   address: PropTypes.string.isRequired,
-  tokens: PropTypes.array.isRequired,
+  tokens: PropTypes.array.isRequired
 };
 
 AdressBalances.defaultProps = {
   useLabel: false,
   role: undefined,
-  refreshToken: false,
+  refreshToken: false
 };
 
-export default web3Connect(connect(state => ({ tokens: getTokens(state) }))(AdressBalances));
+export default web3Connect(
+  connect(state => ({ tokens: getTokens(state) }))(AdressBalances)
+);
