@@ -60,7 +60,7 @@ class AdressBalances extends Component {
       return 0;
     });
     const tokens = sorted
-      .map(token => `${parseBigNumber(token.balance, 9)} ${token.symbol}`)
+      .map(token => `${token.balance} ${token.symbol}`)
       .join(', ');
     return <TableCell>{tokens}</TableCell>;
   }
