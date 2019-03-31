@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Web3 from 'web3';
 import { connect } from 'react-redux';
 import { Divider } from 'semantic-ui-react';
 
@@ -258,6 +259,34 @@ class KeystoreModal extends Component {
     this.handleClose();
   }
 
+  enableMetamask = e => {
+    e.preventDefault();
+    if (!window.ethereum) {
+      this.setState({
+        error:
+          'Cannot connect to MetaMask wallet. Make sure to login to your MetaMask wallet.'
+      });
+      return;
+    }
+
+    window.web3 = new Web3(window.ethereum);
+    window.ethereum
+      .enable()
+      .then(() => {
+        this.handleSubmit();
+      })
+      .catch(() => {
+        this.setState({
+          error:
+            'Cannot connect to MetaMask wallet. Make sure to login to your MetaMask wallet.'
+        });
+      });
+  };
+
+  enableOtherWallets = e => {
+    e.preventDefault();
+    this.handleSubmit();
+  };
   render() {
     const KeystoreForm = this.props.form;
     // const handleRemove = this.props.removeFunc && this.handleRemove;
@@ -270,7 +299,8 @@ class KeystoreModal extends Component {
       classes,
       showBalances,
       data: { type },
-      skipConfirmation
+      skipConfirmation,
+      keystoreType
     } = this.props;
     if (skipConfirmation) return null;
     const keystoreTypes = !config.keystoreTypes
@@ -312,10 +342,11 @@ class KeystoreModal extends Component {
                 <Button
                   color="primary"
                   className={classes.button}
-                  onClick={e => {
-                    e.preventDefault();
-                    this.handleSubmit();
-                  }}
+                  onClick={
+                    keystoreType && keystoreType.toLowerCase() === 'metamask'
+                      ? this.enableMetamask
+                      : this.enableOtherWallets
+                  }
                 >
                   Load
                   <DoneIcon className={classes.rightIcon}>send</DoneIcon>
