@@ -14,6 +14,7 @@ const styles = {
   }
 };
 
+const CANCEL_SIGNING_ERROR = 'Action cancelled by user';
 class TrezorKeystoreTransactionSigner extends Component {
   constructor(props) {
     super(props);
@@ -48,6 +49,10 @@ class TrezorKeystoreTransactionSigner extends Component {
   }
   renderError() {
     const { error } = this.state;
+    if (error.includes(CANCEL_SIGNING_ERROR)) {
+      this.props.hideTxSigningModal({ error: 'Cancelled Signing' });
+      return null;
+    }
     return <Typography color="error">{`Trezor Error - ${error}`}</Typography>;
   }
 
