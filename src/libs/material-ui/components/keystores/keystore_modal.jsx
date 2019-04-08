@@ -8,7 +8,7 @@ import {
   getKeystoreTypes,
   getNetworksWithTokens,
   getDefaultNetworks,
-  getKeystores
+  getKeystores,
 } from '~/selectors';
 
 import config from '~/../spectrum.config';
@@ -29,33 +29,33 @@ const styles = theme => ({
   walletIcon: {
     height: '60px',
     width: '100%',
-    color: theme.palette.secondary.main
+    color: theme.palette.secondary.main,
   },
   root: {
     display: 'flex',
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
   },
   wrapper: {
     position: 'relative',
-    margin: '0 auto'
+    margin: '0 auto',
   },
   rightIcon: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing.unit,
   },
   label: {
-    color: theme.palette.primary.main
+    color: theme.palette.primary.main,
   },
   noMinHeight: {
-    minHeight: 'none'
-  }
+    minHeight: 'none',
+  },
 });
 
 const icons = {
   metamask: MetamaskIcon,
   trezor: TrezorIcon,
   ledger: LedgerIcon,
-  imtoken: ImtokenIcon
+  imtoken: ImtokenIcon,
 };
 
 class KeystoreModal extends Component {
@@ -80,7 +80,9 @@ class KeystoreModal extends Component {
     creatingKeyStore: PropTypes.bool,
     allowedKeystoreTypes: PropTypes.array,
     hideSelector: PropTypes.bool,
-    showBalances: PropTypes.bool
+    showBalances: PropTypes.bool,
+    translations: PropTypes.object.isRequired,
+    commonTranslations: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -289,7 +291,6 @@ class KeystoreModal extends Component {
   };
   render() {
     const KeystoreForm = this.props.form;
-    // const handleRemove = this.props.removeFunc && this.handleRemove;
     const {
       keystoreTypes: rawKeystores,
       hideMenu,
@@ -312,6 +313,11 @@ class KeystoreModal extends Component {
           return config.keystoreTypes.indexOf(id) > -1;
         });
     const Icon = icons[type];
+
+    const t = this.props.translations;
+    const tCommon = this.props.commonTranslations;
+    const title = this.state.data.type === 'metamask' ? t.Name.title : t.chooseAddress.title;
+
     return (
       <Dialog
         trigger={this.props.trigger}
@@ -322,7 +328,7 @@ class KeystoreModal extends Component {
             <div className={classes.wrapper}>
               <Icon className={classes.walletIcon} />
               <Typography variant="title" align="center">
-                {this.props.header}
+                {title}
               </Typography>
             </div>
           </div>
@@ -337,7 +343,7 @@ class KeystoreModal extends Component {
 
           return (
             <div>
-              <Button onClick={() => this.handleCancel(hide)}>Cancel</Button>
+              <Button onClick={() => this.handleCancel(hide)}>{tCommon.cancel}</Button>
               {showLoadButton && (
                 <Button
                   color="primary"
@@ -348,7 +354,7 @@ class KeystoreModal extends Component {
                       : this.enableOtherWallets
                   }
                 >
-                  Load
+                  {tCommon.load}
                   <DoneIcon className={classes.rightIcon}>send</DoneIcon>
                 </Button>
               )}
@@ -361,7 +367,8 @@ class KeystoreModal extends Component {
         ) : (
           <div>
             <KeystoreForm
-              // {...this.props}
+              translations={this.props.translations}
+              commonTranslations={this.props.commonTranslations}
               formData={this.state.data}
               formChange={({ value, name }) =>
                 this.setState({ data: { ...this.state.data, [name]: value } })
@@ -372,7 +379,7 @@ class KeystoreModal extends Component {
                 hideSelector,
                 trezor,
                 onSuccess,
-                showBalances
+                showBalances,
               }}
             />
             {this.state.error && (
@@ -391,8 +398,7 @@ const mapStateToProps = state => ({
   keystoreTypes: getKeystoreTypes(state),
   networks: getNetworksWithTokens(state),
   defaultNetworks: getDefaultNetworks(state),
-  keystores: getKeystores(state)
-  // default networks
+  keystores: getKeystores(state),
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(KeystoreModal));

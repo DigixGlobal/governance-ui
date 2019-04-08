@@ -25,35 +25,27 @@ const defaultPath = "m/44'/60'/0'/0";
 const customPath = "m/44'/60'/3'/0";
 const preSelectedPaths = ["m/44'/60'/0'/0", "m/44'/60'/1'/0", "m/44'/60'/2'/0"];
 
-const testnetPath = "m/44'/1'/0'/0";
-const testnetCustmPath = "m/44'/1'/3'/0";
-const testNetPreselectedPaths = [
-  "m/44'/1'/0'/0",
-  "m/44'/1'/1'/0",
-  "m/44'/1'/2'/0"
-];
-
 const styles = theme => ({
   radio: {
     color: '#000',
-    fontSize: '1.325rem'
+    fontSize: '1.325rem',
   },
   subtext: {
     fontSize: '.975rem',
-    color: 'rgba(0, 0, 0, 0.54)'
+    color: 'rgba(0, 0, 0, 0.54)',
   },
   formControl: {
     margin: theme.spacing.unit,
-    width: '96%'
+    width: '96%',
   },
   radioGroup: {
     display: 'flex',
     flexDirection: 'row',
     margin: '2em 0',
     '& label': {
-      minWidth: '200px'
-    }
-  }
+      minWidth: '200px',
+    },
+  },
 });
 
 export class TrezorKeystoreCreationForm extends Component {
@@ -67,17 +59,17 @@ export class TrezorKeystoreCreationForm extends Component {
 
     const { networks } = this.props.formData;
     const defaultNetwork = networks[0];
-    this.paths = preSelectedPaths; //preSelectedPaths;
+    this.paths = preSelectedPaths; // preSelectedPaths;
     if (defaultNetwork !== 'eth-mainnet') {
       this.onTestNet = true;
-      this.paths = preSelectedPaths; //testNetPreselectedPaths;
+      this.paths = preSelectedPaths; // testNetPreselectedPaths;
     } else {
       this.onTestNet = false;
     }
 
     this.state = {
       hdPath: defaultPath,
-      customPath: customPath,
+      customPath,
       error: undefined,
       useCustom: false,
       loading: false
@@ -89,7 +81,7 @@ export class TrezorKeystoreCreationForm extends Component {
     this.setState({
       customPath: e.target.value,
       useCustom: true,
-      loading: true
+      loading: true,
     });
     setTimeout(() => {
       if (!text.endsWith('/')) this.setState({ loading: false });
@@ -136,13 +128,16 @@ export class TrezorKeystoreCreationForm extends Component {
     const count = Object.values(this.props.formData.addresses || {}).filter(
       a => a.enabled
     ).length;
+
+    const t = this.props.translations.chooseAddress.selectAddress;
+
     return (
       <Fragment>
         <EnhancedTableToolbar numSelected={count} />
         <MuiTable aria-labelledby="tableTitle">
           <TableHead>
             <TableRow>
-              <TableCell>Address</TableCell>
+              <TableCell>{t.address}</TableCell>
               {showBalances && (
                 <Fragment>
                   <TableCell numeric>ETH</TableCell>
@@ -159,6 +154,7 @@ export class TrezorKeystoreCreationForm extends Component {
   renderError({ error }) {
     return <Typography color="error">{`Trezor Error - ${error}`}</Typography>;
   }
+
   renderItem(item) {
     const { showBalances } = this.props;
     if (!item.address) {
@@ -180,8 +176,10 @@ export class TrezorKeystoreCreationForm extends Component {
       />
     );
   }
+
   renderPreselectedPaths() {
     const { classes } = this.props;
+    const t = this.props.translations.chooseAddress.selectPath;
 
     const options = this.paths.map((path, i) => (
       <FormControlLabel
@@ -195,10 +193,8 @@ export class TrezorKeystoreCreationForm extends Component {
             <br />
             <span className={classes.subtext}>
               {i === 0 && !this.onTestNet
-                ? 'Trezor (Default)'
-                : i === 0
-                ? 'Trezor (TestNet Default)'
-                : `Account #${i + 1}`}
+                ? t.default
+                : `${t.account} #${i + 1}`}
             </span>
           </div>
         }
@@ -214,17 +210,19 @@ export class TrezorKeystoreCreationForm extends Component {
       customPath: custom,
       error,
       loading,
-      useCustom
+      useCustom,
     } = this.state;
 
     const { classes } = this.props;
+    const t = this.props.translations.chooseAddress.selectPath;
+
     return (
       <div>
         <Grid container alignItems="center" alignContent="center" spacing={24}>
           <Grid item xs={12} md={12}>
             <FormControl>
               <FormLabel component="legend">
-                Select HD derivation Path
+                {t.instructions}
               </FormLabel>
               <RadioGroup
                 className={classes.radioGroup}
@@ -244,15 +242,13 @@ export class TrezorKeystoreCreationForm extends Component {
                       error={error}
                       autoFocus
                       onChange={this.handleUpdatePath}
-                      // fullWidth
                       placeholder="Enter HD path"
-                      helperText="Custom Wallet HD path"
+                      helperText={t.custom}
                     />
                   }
                 />
               </RadioGroup>
             </FormControl>
-            {/* <TextField label="Name" placeholder="Address nickname" onChange={this.handleUpdatePassword} fullWidth /> */}
           </Grid>
         </Grid>
         {!loading && (
@@ -275,11 +271,12 @@ export class TrezorKeystoreCreationForm extends Component {
 TrezorKeystoreCreationForm.propTypes = {
   formData: PropTypes.object.isRequired,
   formChange: PropTypes.func.isRequired,
-  showBalances: PropTypes.bool
+  showBalances: PropTypes.bool,
+  translations: PropTypes.object.isRequired,
 };
 
 TrezorKeystoreCreationForm.defaultProps = {
-  showBalances: false
+  showBalances: false,
 };
 
 export default withStyles(styles)(TrezorKeystoreCreationForm);

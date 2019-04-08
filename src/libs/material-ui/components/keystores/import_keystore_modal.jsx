@@ -162,9 +162,13 @@ class ImportKeystore extends Component {
       />
     );
   }
+
   renderImport() {
     const { classes } = this.props;
     const { address, loading, error, unlockFunc, privateKey } = this.state;
+    const t = this.props.translations;
+    const tCommon = this.props.commonTranslations;
+
     return (
       <Dialog
         trigger={this.props.trigger}
@@ -177,14 +181,14 @@ class ImportKeystore extends Component {
             <div className={classes.wrapper}>
               <WalletIcon className={classes.walletIcon} />
               <Typography variant="title" align="center">
-                {this.props.header}
+                {t.title}
               </Typography>
             </div>
           </div>
         }
         renderActions={({ hide }) => (
           <div>
-            {!loading && <Button onClick={() => this.handleCancel(hide)}>Cancel</Button>}
+            {!loading && <Button onClick={() => this.handleCancel(hide)}>{tCommon.cancel}</Button>}
             {(address || error) &&
               !loading && (
                 <Button
@@ -194,7 +198,7 @@ class ImportKeystore extends Component {
                     unlockFunc();
                   }}
                 >
-                  Unlock Wallet
+                  {tCommon.unlock}
                 </Button>
               )}
             {loading && (
@@ -216,6 +220,7 @@ class ImportKeystore extends Component {
             setLoading={this.handleSetLoading}
             onGetPrivateKey={this.handleGotPrivateKey}
             onKeystoreLoaded={this.onKeystoreLoaded}
+            translations={t}
           />
         </div>
       </Dialog>
@@ -232,9 +237,10 @@ ImportKeystore.propTypes = {
   skipConfirmation: PropTypes.bool,
   updateDefaultAddress: PropTypes.bool,
   classes: PropTypes.object.isRequired,
-  header: PropTypes.string.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onReset: PropTypes.func,
+  translations: PropTypes.object.isRequired,
+  commonTranslations: PropTypes.object.isRequired,
 };
 
 ImportKeystore.defaultProps = {

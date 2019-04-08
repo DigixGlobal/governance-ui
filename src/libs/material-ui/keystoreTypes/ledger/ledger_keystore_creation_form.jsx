@@ -47,6 +47,7 @@ const styles = theme => ({
     },
   },
 });
+
 class LedgerKeystoreCreationForm extends Component {
   constructor(props) {
     super(props);
@@ -105,13 +106,15 @@ class LedgerKeystoreCreationForm extends Component {
   renderContainer({ renderItems }) {
     const { showBalances } = this.props;
     const count = Object.values(this.props.formData.addresses || {}).filter(a => a.enabled).length;
+    const t = this.props.translations.chooseAddress.selectAddress;
+
     return (
       <div>
         <EnhancedTableToolbar numSelected={count} />
         <MuiTable aria-labelledby="tableTitle">
           <TableHead>
             <TableRow>
-              <TableCell>Address</TableCell>
+              <TableCell>{t.Address}</TableCell>
               {showBalances && (
                 <Fragment>
                   <TableCell numeric>ETH</TableCell>
@@ -125,6 +128,7 @@ class LedgerKeystoreCreationForm extends Component {
       </div>
     );
   }
+
   renderItem(item) {
     const { showBalances } = this.props;
     if (!item.address) {
@@ -148,6 +152,7 @@ class LedgerKeystoreCreationForm extends Component {
 
   renderPreselectedPaths() {
     const { classes } = this.props;
+    const t = this.props.translations.chooseAddress.selectPath;
 
     const options = this.paths.map((path, i) => (
       <FormControlLabel
@@ -160,7 +165,7 @@ class LedgerKeystoreCreationForm extends Component {
             {path}
             <br />
             <span className={classes.subtext}>
-              {i === 0 && !this.onTestNet ? 'Ledger (Default)' : i === 0 ? 'Ledger (Default)' : `Account #${i + 1}`}
+              {i === 0 && !this.onTestNet ? t.default : `${t.account} #${i + 1}`}
             </span>
           </div>
         }
@@ -174,13 +179,15 @@ class LedgerKeystoreCreationForm extends Component {
     const { renderContainer, renderItem } = this;
     const { hdPath, customPath: custom, error, loading, useCustom } = this.state;
     const { classes } = this.props;
+    const t = this.props.translations.chooseAddress.selectPath;
+
     // TODO manage 'edit' mode (without ledger)
     return (
       <div>
         <Grid container alignItems="center" alignContent="center" spacing={24}>
           <Grid item xs={12} md={12}>
             <FormControl>
-              <FormLabel component="legend">Select HD derivation Path</FormLabel>
+              <FormLabel component="legend">{t.instructions}</FormLabel>
               <RadioGroup
                 className={classes.radioGroup}
                 aria-label="ledger-hdpath"
@@ -200,7 +207,7 @@ class LedgerKeystoreCreationForm extends Component {
                       autoFocus
                       onChange={this.handleUpdatePath}
                       placeholder="Enter HD path"
-                      helperText="Ledger Live/Custom Wallet HD path"
+                      helperText={t.custom}
                     />
                   }
                 />
@@ -228,6 +235,7 @@ LedgerKeystoreCreationForm.propTypes = {
   formData: PropTypes.object.isRequired,
   formChange: PropTypes.func.isRequired,
   showBalances: PropTypes.bool,
+  translations: PropTypes.object.isRequired,
 };
 
 LedgerKeystoreCreationForm.defaultProps = {
