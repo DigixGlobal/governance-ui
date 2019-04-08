@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({
+const styles = () => ({
   message: {
     color: '#000',
     marginBottom: '20px !important',
@@ -13,23 +13,23 @@ const styles = theme => ({
 class KeystoreTypeMessage extends React.Component {
   render() {
     const { keystoreType, classes } = this.props;
-    return <Typography className={classes.message}>{keystoreType.description}</Typography>;
-    // return (
+    const t = this.props.translations;
 
-    //   // <InfoArea message={keystoreType.description} color="info" close icon={keystoreType.icon || null} />
-    //   // <Message info icon>
-    //   //   <Icon className={keystoreType.icon || 'info circle'} />
-    //   //   <Message.Content>
-    //   //     <Message.Header>{keystoreType.name}</Message.Header>
-    //   //     {keystoreType.description}
-    //   //   </Message.Content>
-    //   // </Message>
-    // );
+    let description = keystoreType.description;
+    if (keystoreType.id === 'metamask') {
+      description = t.Name.instructions;
+    } else if (['ledger', 'trezor'].includes(keystoreType.id)) {
+      description = t.chooseAddress.description;
+    }
+
+    return <Typography className={classes.message}>{description}</Typography>;
   }
 }
 
 KeystoreTypeMessage.propTypes = {
   keystoreType: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
+  translations: PropTypes.object.isRequired,
 };
+
 export default withStyles(styles)(KeystoreTypeMessage);
