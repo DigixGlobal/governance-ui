@@ -16,35 +16,32 @@ import { getFileContents } from '~/helpers/fileUtils';
 const styles = theme => ({
   container: {
     display: 'flex',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   formControl: {
     margin: theme.spacing.unit,
-    width: '96%'
+    width: '96%',
   },
   dropZone: {
     width: 500,
-    /* height: 200px; */
     borderWidth: 1,
     borderColor: 'rgb(102, 102, 102)',
     boxShadow: 'inset 0 0 0 1px #a9d5de, 0 0 0 0 transparent',
-    // borderStyle: 'solid',
     borderRadius: 5,
-    // backgroundColor: '#f8ffff',
     fontFamily: 'futura-pt,"Futura PT",Roboto,Arial,sans-serif',
     fontSize: '1.2em',
     color: theme.palette.primary.main,
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   padded: {
     margin: 0,
     textAlign: 'center',
     paddingTop: '1rem',
-    paddingBottom: '1rem'
+    paddingBottom: '1rem',
   },
   address: {
-    fontSize: '23px'
-  }
+    fontSize: '23px',
+  },
 });
 
 class ImportKeystoreForm extends Component {
@@ -52,8 +49,10 @@ class ImportKeystoreForm extends Component {
     setError: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     setLoading: PropTypes.func.isRequired,
-    onGetPrivateKey: PropTypes.func.isRequired
+    onGetPrivateKey: PropTypes.func.isRequired,
+    translations: PropTypes.object.isRequired,
   };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -137,12 +136,14 @@ class ImportKeystoreForm extends Component {
       </Dropzone>
     );
   }
+
   renderUnlock() {
     const { keystore, password, error } = this.state;
     const { classes } = this.props;
+    const t = this.props.translations;
+
     return (
       <div className={classes.container}>
-        {/* <form onSubmit={this.handleUnlock}> */}
         <Grid container alignItems="center" alignContent="center" spacing={24}>
           <Grid item xs={12} md={12}>
             <Typography
@@ -159,22 +160,20 @@ class ImportKeystoreForm extends Component {
           <Grid item xs={12} md={12}>
             <FormControl className={classes.formControl}>
               <TextField
-                label="Enter Password"
+                label={t.password}
                 id="name-simple"
                 value={password}
                 type="password"
                 error={error !== false && error !== undefined && error !== null}
                 autoFocus
                 onChange={this.handleUpdatePassword}
-                // fullWidth
-                placeholder="Enter Password"
-                helperText="Enter your Password to Unlock your Wallet"
+                placeholder={t.password}
+                helperText={t.unlockInstructions}
                 inputProps={{
                   onKeyDown: event => this.handleKeydown(event)
                 }}
               />
             </FormControl>
-            {/* <TextField label="Name" placeholder="Address nickname" onChange={this.handleUpdatePassword} fullWidth /> */}
           </Grid>
         </Grid>
         {error && (
@@ -191,7 +190,6 @@ class ImportKeystoreForm extends Component {
             </Grid>
           </Grid>
         )}
-        {/* </form> */}
       </div>
     );
   }

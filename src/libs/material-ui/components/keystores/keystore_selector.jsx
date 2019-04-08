@@ -15,11 +15,14 @@ export default class KeystoreSelector extends Component {
     keystoreType: PropTypes.object,
     keystoreTypes: PropTypes.array.isRequired,
     hideSelector: PropTypes.bool,
+    translations: PropTypes.object.isRequired,
   };
+
   static defaultProps = {
     keystoreType: undefined,
     hideSelector: false,
   };
+
   renderDropdown() {
     const { formChange, formData, resetFormData, keystoreType, keystoreTypes, hideSelector } = this.props;
     return (
@@ -34,7 +37,7 @@ export default class KeystoreSelector extends Component {
           />
         )}
 
-        <KeystoreTypeMessage keystoreType={keystoreType} />
+        <KeystoreTypeMessage keystoreType={keystoreType} translations={this.props.translations} />
       </Form.Field>
     );
   }
