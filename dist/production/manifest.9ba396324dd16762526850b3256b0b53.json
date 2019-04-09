@@ -1,0 +1,42 @@
+{
+  "icons": [
+    {
+      "src": "./icon_512x512.7f561f9ad8daa631cfe1a28366bbbbad.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon_256x256.66f21f9972534d2d8ae60ea0047ede6a.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon_192x192.b86306567bc67b7043ebf8f12cf25529.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon_144x144.b61996a76c12777581f17b0c9d4175c7.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon_128x128.1223f16f6790c5ee2d8d523bf42c03e2.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon_96x96.b9635a0ca7f294b6a8fb98498d82e6ed.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    }
+  ],
+  "name": "DAO Governance",
+  "short_name": "DAO Governance",
+  "orientation": "portrait",
+  "display": "standalone",
+  "start_url": "/",
+  "description": "Full Gamut Ethereum Lightsuite",
+  "background_color": "#111111",
+  "theme_color": "#111111"
+}

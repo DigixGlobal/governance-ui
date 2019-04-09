@@ -50,4 +50,5 @@ todo.txt
 stats.json
 errorShots
 .cache-loader
-dist/production
+dist/kovan
+dist/rinkeby
