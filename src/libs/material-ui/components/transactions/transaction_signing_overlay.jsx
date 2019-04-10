@@ -228,6 +228,7 @@ class TransactionSigningOverlay extends Component {
   }
 
   renderAdvancedTab() {
+    const t = this.props.data.translations.common;
     const { classes } = this.props;
     const { gasPrice, openAdvanced, showAdvancedTab } = this.state;
 
@@ -265,7 +266,7 @@ class TransactionSigningOverlay extends Component {
           onClick={this.toggleAdvancedTab}
           variant="outlined"
         >
-          Advanced
+          {t.advanced}
           <ExpandMoreIcon
             className={classnames(classes.expand, {
               [classes.expandOpen]: openAdvanced,
@@ -277,7 +278,7 @@ class TransactionSigningOverlay extends Component {
           <Card className={classes.card}>
             <Grid container>
               <Grid item xs={9} className={classes.noPadding}>
-                <Typography className={classes.typography}>GAS PRICE</Typography>
+                <Typography className={classes.typography}>{t.gasPrice}</Typography>
               </Grid>
               <Grid item xs={3} className={classes.voteSelection}>
                 <Typography className={classes.selected} variant="caption">
@@ -313,9 +314,10 @@ class TransactionSigningOverlay extends Component {
       return null;
     }
 
-    const { network, address, txData, ui, logTxn } = data;
+    const { network, address, txData, ui, logTxn, translations } = data;
     const logToggleDetails = logTxn && logTxn.toggleDetails ? logTxn.toggleDetails : undefined;
 
+    const t = translations.common;
     const { keystore } = address;
     const {
       signedTx,
@@ -336,7 +338,7 @@ class TransactionSigningOverlay extends Component {
 
     const SigningComponent = getKeystoreComponent({
       id: keystore.type.id,
-      type: 'transactionSigner'
+      type: 'transactionSigner',
     });
 
     return (
@@ -349,7 +351,7 @@ class TransactionSigningOverlay extends Component {
         disableEscapeKeyDown
         fullWidth
       >
-        <DialogTitle id="alert-dialog-title">Transaction Status</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{t.title}</DialogTitle>
         <DialogContent>
           <Grid container spacing={16} direction="column">
             <Grid item xs={12}>
@@ -358,6 +360,7 @@ class TransactionSigningOverlay extends Component {
             <Grid item xs={12}>
               <TransactionInfo
                 logToggleDetails={logToggleDetails}
+                translations={translations}
                 {...{ address, ui, txData: newTxData, network }}
               />
             </Grid>
@@ -369,6 +372,7 @@ class TransactionSigningOverlay extends Component {
                     setLoading={this.handleSetLoading}
                     hideTxSigningModal={this.handleSign}
                     hideAdvancedTab={this.hideAdvancedTab}
+                    translations={translations}
                     logTxn={logTxn}
                   />
                   {this.renderAdvancedTab()}
