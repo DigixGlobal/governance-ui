@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Message } from 'semantic-ui-react';
 import LedgerContainer from '@digix/react-ledger-container';
+import { Message } from 'semantic-ui-react';
+import { injectTranslation } from '../.../..//../../../helpers/stringUtils';
 
 export default class LedgerKeystoreMessageSigner extends Component {
   constructor(props) {
@@ -17,6 +18,8 @@ export default class LedgerKeystoreMessageSigner extends Component {
   }
   render() {
     const { kdPath, address } = this.props.address;
+    const t = this.props.txData.translations.Ledger.chooseAddress.proofOfControl;
+
     return (
       <LedgerContainer
         expect={{ kdPath, address }}
@@ -26,8 +29,8 @@ export default class LedgerKeystoreMessageSigner extends Component {
             icon={config.eip155 ? 'checkmark' : 'warning'}
             positive={config.eip155}
             warning={!config.eip155}
-            header={'Ready to Sign Message'}
-            content={`Firmware ${config.version} - replay protection ${config.eip155 ? 'en' : 'dis'}abled!`}
+            header={t.description}
+            content={injectTranslation(t.firmware, { version: config.version })}
           />
         )}
       />
