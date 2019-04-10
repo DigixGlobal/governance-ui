@@ -53,6 +53,7 @@ export default class TrezorKeystoreMessageSigner extends Component {
       return this.renderError();
     }
 
+    const t = this.props.txData.translations.Trezor.chooseAddress.proofOfControl;
     return (
       <TrezorContainer
         expect={{ kdPath, address }}
@@ -62,8 +63,8 @@ export default class TrezorKeystoreMessageSigner extends Component {
           <Message
             icon="check"
             positive
-            header={'Ready to Sign Message'}
-            content="Trezor Popup window is loading. Please follow instructions from the popup and your Trezor Wallet to continue."
+            header={t.description}
+            content={t.instructions}
           />
         )}
       />

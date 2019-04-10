@@ -34,13 +34,15 @@ export default class V3KestoreMessageSigner extends Component {
 
   render() {
     const { error } = this.state;
+    const t = this.props.txData.translations.Metamask.Name.proofOfControl;
+
     return (
       <div>
         <Message icon>
           <Icon name="circle notched" loading />
           <Message.Content>
-            <Message.Header>Waiting MetaMask Sign Confirmation</Message.Header>
-            Please confirm your signature in MetaMask. If you wish to cancel, click the "Cancel" button in MetaMask.
+            <Message.Header>{t.description}</Message.Header>
+            <p>{t.instructions}</p>
           </Message.Content>
         </Message>
         {error && <ErrorMessage content={error} />}
