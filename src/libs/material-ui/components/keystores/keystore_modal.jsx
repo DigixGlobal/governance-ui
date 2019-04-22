@@ -261,13 +261,12 @@ class KeystoreModal extends Component {
     this.handleClose();
   }
 
-  enableMetamask = e => {
+  enableMetamask = (e) => {
     e.preventDefault();
+    const t = this.props.translations.Name.ConnectionError;
+
     if (!window.ethereum) {
-      this.setState({
-        error:
-          'Cannot connect to MetaMask wallet. Make sure to login to your MetaMask wallet.'
-      });
+      this.setState({ error: t.noMetamask });
       return;
     }
 
@@ -278,17 +277,15 @@ class KeystoreModal extends Component {
         this.handleSubmit();
       })
       .catch(() => {
-        this.setState({
-          error:
-            'Cannot connect to MetaMask wallet. Make sure to login to your MetaMask wallet.'
-        });
+        this.setState({ error: t.noMetamask });
       });
   };
 
-  enableOtherWallets = e => {
+  enableOtherWallets = (e) => {
     e.preventDefault();
     this.handleSubmit();
   };
+
   render() {
     const KeystoreForm = this.props.form;
     const {

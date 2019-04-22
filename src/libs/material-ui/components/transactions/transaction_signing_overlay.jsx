@@ -196,12 +196,14 @@ class TransactionSigningOverlay extends Component {
 
   handleCancel() {
     const { logTxn } = this.props.data;
+    const t = this.props.data.translations.common;
+
     if (logTxn) {
       logTxn.cancel();
     }
 
     this.setState(defaultState);
-    this.props.hideTxSigningModal({ error: 'Cancelled Signing' });
+    this.props.hideTxSigningModal({ error: t.cancelled });
   }
 
   handleChange = (name, { min, max }) => event => {
@@ -401,7 +403,7 @@ class TransactionSigningOverlay extends Component {
         <DialogActions>
           {this.state.showAdvancedTab && (
             <Button color="primary" onClick={this.handleCancel}>
-              Cancel Signing
+              {t.cancel}
             </Button>
           )}
           {signingAction && !loading && signingAction()}

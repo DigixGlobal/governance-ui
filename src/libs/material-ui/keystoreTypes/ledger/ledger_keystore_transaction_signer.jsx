@@ -47,8 +47,10 @@ class LedgerKeystoreTransactionSigner extends Component {
 
   renderError() {
     const { error } = this.state;
+    const t = this.props.translations.common;
+
     if (error.includes(CANCEL_SIGNING_ERROR)) {
-      this.props.hideTxSigningModal({ error: 'Cancelled Signing' });
+      this.props.hideTxSigningModal({ error: t.cancelled });
       return null;
     }
 
