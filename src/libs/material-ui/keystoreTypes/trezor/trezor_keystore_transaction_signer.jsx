@@ -54,10 +54,10 @@ class TrezorKeystoreTransactionSigner extends Component {
 
   renderError() {
     const { error } = this.state;
-    const t = this.props.translations.Trezor;
+    const t = this.props.translations.common;
 
     if (error.includes(this.CANCEL_SIGNING_ERROR)) {
-      this.props.hideTxSigningModal({ error: 'Cancelled Signing' });
+      this.props.hideTxSigningModal({ error: t.cancelled });
       return null;
     }
 

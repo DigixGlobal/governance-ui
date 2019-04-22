@@ -97,29 +97,33 @@ class ImportKeystoreForm extends Component {
     this.setState({ password: e.target.value, error: !withValue });
   }
   handleFileDrop(file) {
+    const t = this.props.translations;
     this.props.setError(false);
+
     getFileContents(file)
-      .then(fileContent => {
+      .then((fileContent) => {
         try {
           const keystore = JSON.parse(fileContent);
           if (keystore.version !== 3) {
-            throw new Error('Keystore type not supported');
+            throw new Error(t.importError);
           }
           this.setState({ fileContent, keystore });
           this.props.setLoading(false, keystore.address, this.handleUnlock);
         } catch (e) {
-          throw new Error('Keystore type not supported');
+          throw new Error(t.importError);
         }
       })
       .catch(error => this.props.setError(error));
   }
-  handleKeydown = event => {
+
+  handleKeydown = (event) => {
     if (event.keyCode === 13) {
       this.handleUnlock();
     }
   };
 
   renderDropzone() {
+    const t = this.props.translations;
     return (
       <Dropzone
         className={this.props.classes.dropZone}
@@ -129,7 +133,7 @@ class ImportKeystoreForm extends Component {
           <div className="center aligned column">
             <PublishIcon />
             <Typography variant="body1" color="primary">
-              Click or drag and drop here to load your wallet file.
+              {t.importInstructions}
             </Typography>
           </div>
         </div>
