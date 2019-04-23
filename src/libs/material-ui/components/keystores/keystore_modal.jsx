@@ -81,8 +81,8 @@ class KeystoreModal extends Component {
     allowedKeystoreTypes: PropTypes.array,
     hideSelector: PropTypes.bool,
     showBalances: PropTypes.bool,
-    translations: PropTypes.object.isRequired,
-    commonTranslations: PropTypes.object.isRequired,
+    translations: PropTypes.object,
+    commonTranslations: PropTypes.object,
   };
 
   static defaultProps = {
@@ -99,7 +99,9 @@ class KeystoreModal extends Component {
     creatingKeyStore: false,
     allowedKeystoreTypes: undefined,
     hideSelector: false,
-    showBalances: false
+    showBalances: false,
+    translations: undefined,
+    commonTranslations: undefined,
   };
   constructor(props) {
     super(props);
@@ -261,13 +263,12 @@ class KeystoreModal extends Component {
     this.handleClose();
   }
 
-  enableMetamask = e => {
+  enableMetamask = (e) => {
     e.preventDefault();
+    const t = this.props.translations.Name.ConnectionError;
+
     if (!window.ethereum) {
-      this.setState({
-        error:
-          'Cannot connect to MetaMask wallet. Make sure to login to your MetaMask wallet.'
-      });
+      this.setState({ error: t.noMetamask });
       return;
     }
 
@@ -278,17 +279,15 @@ class KeystoreModal extends Component {
         this.handleSubmit();
       })
       .catch(() => {
-        this.setState({
-          error:
-            'Cannot connect to MetaMask wallet. Make sure to login to your MetaMask wallet.'
-        });
+        this.setState({ error: t.noMetamask });
       });
   };
 
-  enableOtherWallets = e => {
+  enableOtherWallets = (e) => {
     e.preventDefault();
     this.handleSubmit();
   };
+
   render() {
     const KeystoreForm = this.props.form;
     const {

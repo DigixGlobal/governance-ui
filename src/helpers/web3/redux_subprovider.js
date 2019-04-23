@@ -18,12 +18,12 @@ export default class ReduxSubProvider extends HookedWalletEthTx {
     this.rpcNetworkId = networkId;
 
     // overriding https://github.com/MetaMask/provider-engine/blob/master/subproviders/hooked-wallet-ethtx.js
-    this.signTransaction = ({ ui, logTxn, ...data }, cb) => {
+    this.signTransaction = ({ ui, logTxn, translations, ...data }, cb) => {
       const network = getNetworks(this.rpcStore.getState()).find(({ id }) => id === this.rpcNetworkId) || {};
       const txData = sanitizeData(data, network);
       const address = getAddresses(this.rpcStore.getState()).find(a => a.address === txData.from);
       this.rpcStore
-        .dispatch(showTxSigningModal({ address, txData, ui, network, logTxn }))
+        .dispatch(showTxSigningModal({ address, txData, ui, network, logTxn, translations }))
         .then(({ signedTx }) => {
           cb(null, signedTx);
         })
