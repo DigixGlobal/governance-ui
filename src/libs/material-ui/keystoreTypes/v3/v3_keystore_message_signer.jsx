@@ -71,13 +71,16 @@ export class V3KestoreMessageSigner extends Component {
   }
 
   signMessage() {
+    const log = this.props.txData.logSignMessage.txn;
     this.setState({ error: false, signing: true });
 
     setTimeout(() => {
-      const throwErr = error => {
+      const throwErr = (error) => {
+        log.completeTransaction(false, error);
         this.props.setLoading(false);
         this.setState({ error, signing: false });
       };
+
       try {
         const { address, txData, web3Redux } = this.props;
         const { keystore } = address;
@@ -85,7 +88,10 @@ export class V3KestoreMessageSigner extends Component {
         const { message } = txData;
 
         v3SignMsg({ txData: message, keystore, password, web3Redux })
-          .then(this.props.hideMsgSigningModal)
+          .then((data) => {
+            log.completeTransaction(true);
+            this.props.hideMsgSigningModal(data);
+          })
           .catch(throwErr);
       } catch (error) {
         throwErr(error);

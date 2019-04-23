@@ -101,13 +101,16 @@ class MessageSigningOverlay extends Component {
     this.handleSetLoading = this.handleSetLoading.bind(this);
     this.handleSign = this.handleSign.bind(this);
   }
+
   handleSetLoading(loading, signingAction) {
     this.setState({ loading, signingAction });
   }
+
   handleBroadcast(...args) {
     this.setState(defaultState);
     this.props.hideMsgSigningModal(...args);
   }
+
   handleSign(...args) {
     this.handleSetLoading(false);
     if (args.error || this.state.autoBroadcast) {
@@ -116,11 +119,16 @@ class MessageSigningOverlay extends Component {
       this.setState({ signedTx: args[0].signedTx });
     }
   }
+
   handleFailure() {
     this.setState(defaultState);
     this.props.hideMsgSigningModal({ error: 'Could not find Address' });
   }
+
   handleCancel() {
+    const log = this.props.data.txData.logSignMessage.txn;
+    log.cancel();
+
     this.setState(defaultState);
     this.props.hideMsgSigningModal({ error: 'Cancelled Signing' });
   }

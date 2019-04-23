@@ -83,6 +83,7 @@ class KeystoreModal extends Component {
     showBalances: PropTypes.bool,
     translations: PropTypes.object,
     commonTranslations: PropTypes.object,
+    logLoadWallet: PropTypes.object,
   };
 
   static defaultProps = {
@@ -102,6 +103,7 @@ class KeystoreModal extends Component {
     showBalances: false,
     translations: undefined,
     commonTranslations: undefined,
+    logLoadWallet: {},
   };
   constructor(props) {
     super(props);
@@ -181,10 +183,11 @@ class KeystoreModal extends Component {
   }
 
   downloadKeystore(keystore) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const { data, addresses } = keystore;
       const parsed = JSON.parse(data);
       const { address } = parsed;
+
       // update the name
       const content = JSON.stringify({ ...parsed, name: addresses[0].name });
       const name = getV3FileName(address);
@@ -193,10 +196,22 @@ class KeystoreModal extends Component {
   }
 
   handleSubmit(newFormData) {
-    const { creatingKeyStore } = this.props;
+    let keystoreType = newFormData ? newFormData.type : this.state.data.type;
+    if (keystoreType === 'v3') {
+      keystoreType = 'json';
+    }
+
+    const { creatingKeyStore, logLoadWallet } = this.props;
     this.setState({ error: false });
+
     // it's async, lets show some loading UI
     return new Promise((resolve, reject) => {
+      const throwErr = (error) => {
+        logLoadWallet.loadError(error);
+        this.setState({ loading: false, error });
+        return reject();
+      };
+
       this.setState({ loading: true });
       setTimeout(() => {
         let func;
@@ -205,34 +220,34 @@ class KeystoreModal extends Component {
           if (creatingKeyStore) {
             this.setState({ createdAccount: true });
           }
+
           func = this.props.submitFunc(newFormData || { ...this.state.data }, {
-            ...this.state.data
+            ...this.state.data,
           });
         } catch (error) {
-          this.setState({ loading: false, error });
-          return reject();
+          throwErr(error);
         }
+
         // async promise
         if (func && func.then) {
           func
             .then(() => {
               this.setState({ loading: false });
+              logLoadWallet.load(keystoreType);
               resolve();
             })
-            .catch(error => {
-              this.setState({ loading: false, error });
-              reject();
-            });
+            .catch(throwErr);
         } else {
           // sync
           const { onClose, onSuccess } = this.props;
+          logLoadWallet.load(keystoreType);
 
           if (onClose) {
             onClose();
           }
 
           if (onSuccess) {
-            resolve(onSuccess());
+            onSuccess();
           }
 
           resolve();
@@ -240,10 +255,12 @@ class KeystoreModal extends Component {
       }, 10);
     });
   }
+
   handleRemove() {
     // TODO some validation?
     this.props.removeFunc(this.props.data.id);
   }
+
   handleClose() {
     if (this.props.onClose) {
       this.props.onClose();
@@ -257,9 +274,14 @@ class KeystoreModal extends Component {
   }
 
   handleCancel(func) {
+    const { logLoadWallet } = this.props;
+    const keystoreType = this.state.data.type;
+    logLoadWallet.cancel(keystoreType);
+
     if (func) {
       func();
     }
+
     this.handleClose();
   }
 
@@ -268,6 +290,7 @@ class KeystoreModal extends Component {
     const t = this.props.translations.Name.ConnectionError;
 
     if (!window.ethereum) {
+      logLoadWallet.loadError('Cannot connect to MetaMask wallet.');
       this.setState({ error: t.noMetamask });
       return;
     }
@@ -279,6 +302,8 @@ class KeystoreModal extends Component {
         this.handleSubmit();
       })
       .catch(() => {
+        const { logLoadWallet } = this.props;
+        logLoadWallet.loadError('Cannot connect to MetaMask wallet.');
         this.setState({ error: t.noMetamask });
       });
   };
@@ -300,19 +325,24 @@ class KeystoreModal extends Component {
       showBalances,
       data: { type },
       skipConfirmation,
-      keystoreType
+      keystoreType,
+      logLoadWallet,
     } = this.props;
-    if (skipConfirmation) return null;
+
+    if (skipConfirmation) {
+      return null;
+    }
+
     const keystoreTypes = !config.keystoreTypes
       ? rawKeystores
       : rawKeystores.filter(({ id }) => {
-          if (this.props.allowedKeystoreTypes) {
-            return this.props.allowedKeystoreTypes.indexOf(id) > -1;
-          }
-          return config.keystoreTypes.indexOf(id) > -1;
-        });
-    const Icon = icons[type];
+        if (this.props.allowedKeystoreTypes) {
+          return this.props.allowedKeystoreTypes.indexOf(id) > -1;
+        }
+        return config.keystoreTypes.indexOf(id) > -1;
+      });
 
+    const Icon = icons[type];
     const t = this.props.translations;
     const tCommon = this.props.commonTranslations;
     const title = this.state.data.type === 'metamask' ? t.Name.title : t.chooseAddress.title;
@@ -322,6 +352,7 @@ class KeystoreModal extends Component {
         trigger={this.props.trigger}
         maxWidth={showBalances ? 'md' : 'sm'}
         className={classes.noMinHeight}
+        onEnter={() => logLoadWallet.selectWalletType(this.state.data.type)}
         title={
           <div className={classes.root}>
             <div className={classes.wrapper}>
