@@ -81,8 +81,8 @@ class KeystoreModal extends Component {
     allowedKeystoreTypes: PropTypes.array,
     hideSelector: PropTypes.bool,
     showBalances: PropTypes.bool,
-    translations: PropTypes.object.isRequired,
-    commonTranslations: PropTypes.object.isRequired,
+    translations: PropTypes.object,
+    commonTranslations: PropTypes.object,
   };
 
   static defaultProps = {
@@ -99,7 +99,9 @@ class KeystoreModal extends Component {
     creatingKeyStore: false,
     allowedKeystoreTypes: undefined,
     hideSelector: false,
-    showBalances: false
+    showBalances: false,
+    translations: undefined,
+    commonTranslations: undefined,
   };
   constructor(props) {
     super(props);
