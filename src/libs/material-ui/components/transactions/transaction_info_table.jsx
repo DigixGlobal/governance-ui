@@ -42,7 +42,7 @@ class TransactionInfoTable extends Component {
     txData: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     logToggleDetails: PropTypes.func,
-    translations: PropTypes.func.isRequired,
+    translations: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
