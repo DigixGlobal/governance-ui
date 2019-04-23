@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import Markdown from 'react-markdown';
 
 import Fingerprint from '@material-ui/icons/Fingerprint';
 import LedgerContainer from '@digix/react-ledger-container';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { injectTranslation } from '../../../../helpers/stringUtils';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
@@ -45,8 +47,10 @@ class LedgerKeystoreTransactionSigner extends Component {
 
   renderError() {
     const { error } = this.state;
+    const t = this.props.translations.common;
+
     if (error.includes(CANCEL_SIGNING_ERROR)) {
-      this.props.hideTxSigningModal({ error: 'Cancelled Signing' });
+      this.props.hideTxSigningModal({ error: t.cancelled });
       return null;
     }
 
@@ -54,6 +58,7 @@ class LedgerKeystoreTransactionSigner extends Component {
   }
 
   renderReady = ({ config }) => {
+    const t = this.props.translations.Ledger;
     const { success } = this.props.classes;
     const { eip155, version } = config;
     const protectionStatus = eip155 ? 'enabled' : 'disabled';
@@ -64,10 +69,10 @@ class LedgerKeystoreTransactionSigner extends Component {
           <Fingerprint classes={{ root: success }} />
         </Typography>
         <Typography align="center" className={success} variant="title">
-          Ready to Sign Transaction
+          {t.ready}
         </Typography>
         <Typography align="center" className={success} variant="body2">
-          {`Firmware ${version} - replay protection ${protectionStatus}!`}
+          {injectTranslation(t.firmware, { version })}
         </Typography>
       </Fragment>
     );
@@ -84,15 +89,12 @@ class LedgerKeystoreTransactionSigner extends Component {
       margin: '0 auto',
     };
 
+    const t = this.props.translations.common;
     return (
       <Fragment>
-        <p>
-          You can modify the transaction details using the <b>Advanced</b> tab below.
-          Once you are satisfied with the details, please click <b>Sign Transaction</b>
-          to confirm the transaction with your ledger device.
-        </p>
+        <Markdown source={t.modifyInstructions} escapeHtml={false} />
         <Button variant="outlined" onClick={handleInitiateSigning} style={buttonStyle}>
-          Sign Transaction
+          {t.sign}
         </Button>
       </Fragment>
     );
@@ -124,6 +126,7 @@ LedgerKeystoreTransactionSigner.propTypes = {
   txData: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   logTxn: PropTypes.object,
+  translations: PropTypes.object.isRequired,
 };
 
 LedgerKeystoreTransactionSigner.defaultProps = {

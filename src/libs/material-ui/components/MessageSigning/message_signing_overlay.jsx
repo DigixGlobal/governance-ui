@@ -124,38 +124,44 @@ class MessageSigningOverlay extends Component {
     this.setState(defaultState);
     this.props.hideMsgSigningModal({ error: 'Cancelled Signing' });
   }
+
   render() {
     const { data, address, web3Redux, classes } = this.props;
 
     if (!data) {
       return null;
     }
+
     const { network, txData } = data;
     const { keystore } = address;
     const { signedTx, loading, signingAction } = this.state;
+
     if (!txData || !keystore) {
       return null;
     }
+
+    const t = txData.translations.common;
     const SigningComponent = getKeystoreComponent({
       id: keystore.type.id,
-      type: 'messageSigner'
+      type: 'messageSigner',
     });
+
     return (
       <Dialog
         initiallyOpen
         className={classes.noMinHeight}
         contentClasses={{
-          root: classes.dialogContent
+          root: classes.dialogContent,
         }}
-        renderActions={({ hide }) => (
+        renderActions={() => (
           <div>
-            <Button onClick={this.handleCancel}>Cancel Signing</Button>
+            <Button onClick={this.handleCancel}>{t.cancelSigning}</Button>
             {signingAction && !loading && signingAction()}
           </div>
         )}
       >
         <DialogTitle id="alert-dialog-title" classes={{ root: classes.title }}>
-          Sign Proof of Control
+          {t.proofOfControl}
         </DialogTitle>
         <DialogContent>
           {!signedTx ? (

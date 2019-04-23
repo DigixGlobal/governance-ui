@@ -42,6 +42,7 @@ class TransactionInfoTable extends Component {
     txData: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     logToggleDetails: PropTypes.func,
+    translations: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -81,7 +82,9 @@ class TransactionInfoTable extends Component {
     if (this.props.open) {
       return this.renderTable();
     }
+    const t = this.props.translations.common;
     const { open } = this.state;
+
     return (
       <div>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -103,7 +106,7 @@ class TransactionInfoTable extends Component {
                 [classes.expandOpen]: open,
               })}
             />
-            Details
+            {t.details}
           </Button>
         </div>
         <Collapse in={open}>{this.renderTable()}</Collapse>

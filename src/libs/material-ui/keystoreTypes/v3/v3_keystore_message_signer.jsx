@@ -84,7 +84,6 @@ export class V3KestoreMessageSigner extends Component {
         const { password } = this.state;
         const { message } = txData;
 
-        // const buff = new Buffer(util.stripHexPrefix(util.sha3(txData)), 'hex');
         v3SignMsg({ txData: message, keystore, password, web3Redux })
           .then(this.props.hideMsgSigningModal)
           .catch(throwErr);
@@ -104,6 +103,8 @@ export class V3KestoreMessageSigner extends Component {
     const { error, signing } = this.state;
     const { classes, txData } = this.props;
     const { caption } = txData;
+    const t = txData.translations.Json;
+
     return (
       <div className={classes.root}>
         <form
@@ -126,7 +127,7 @@ export class V3KestoreMessageSigner extends Component {
             <Grid item xs={8} md={12}>
               <FormControl className={classes.textField}>
                 <Input
-                  label="Enter Password"
+                  label={t.password}
                   id="name-simple"
                   value={this.state.password}
                   type="password"
@@ -134,8 +135,8 @@ export class V3KestoreMessageSigner extends Component {
                   onChange={this.handleChange}
                   autoFocus
                   fullWidth
-                  placeholder="Enter Password"
-                  helperText="Enter your Password to Sign Message"
+                  placeholder={t.password}
+                  helperText={t.signInstructions}
                 />
               </FormControl>
             </Grid>

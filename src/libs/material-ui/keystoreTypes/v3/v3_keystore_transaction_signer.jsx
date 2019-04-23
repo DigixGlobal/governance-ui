@@ -40,9 +40,12 @@ class V3KestoreTransactionSigner extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.triggerSubmit = this.triggerSubmit.bind(this);
 
-    this.signingButton = () => (
-      <Button onClick={this.triggerSubmit}>Sign Transaction</Button>
-    );
+    this.signingButton = () => {
+      const t = this.props.translations.common;
+      return (
+        <Button onClick={this.triggerSubmit}>{t.sign}</Button>
+      );
+    };
   }
 
   onKeyPress(e) {
@@ -96,6 +99,8 @@ class V3KestoreTransactionSigner extends Component {
   render() {
     const { error, password } = this.state;
     const { classes } = this.props;
+    const t = this.props.translations.Json;
+
     return (
       <div className={classes.root}>
         <form
@@ -113,7 +118,7 @@ class V3KestoreTransactionSigner extends Component {
             <Grid item xs={8} md={12}>
               <FormControl className={classes.textField}>
                 <Input
-                  label="Enter Password"
+                  label={t.password}
                   id="name-simple"
                   value={password}
                   type="password"
@@ -121,8 +126,8 @@ class V3KestoreTransactionSigner extends Component {
                   onChange={this.handleChange}
                   autoFocus
                   fullWidth
-                  placeholder="Enter Password"
-                  helperText="Enter your Password to Sign your Transaction"
+                  placeholder={t.password}
+                  helperText={t.instructions}
                 />
               </FormControl>
             </Grid>
@@ -154,6 +159,7 @@ V3KestoreTransactionSigner.propTypes = {
   txData: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   logTxn: PropTypes.object,
+  translations: PropTypes.object.isRequired,
 };
 
 V3KestoreTransactionSigner.defaultProps = {

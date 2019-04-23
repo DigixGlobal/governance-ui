@@ -131,10 +131,12 @@ class LedgerKeystoreCreationForm extends Component {
 
   renderItem(item) {
     const { showBalances } = this.props;
+    const t = this.props.translations.chooseAddress.selectPath;
+
     if (!item.address) {
       return (
         <TableRow disabled key={item.kdPath}>
-          <TableCell colSpan={100}>Getting Address Info...</TableCell>
+          <TableCell colSpan={100}>{t.loading}</TableCell>
         </TableRow>
       );
     }

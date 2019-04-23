@@ -71,13 +71,15 @@ class MetaMaskTransactionSigner extends Component {
 
   render() {
     const { classes } = this.props;
+    const t = this.props.translations.Metamask;
+
     return (
       <div style={{ marginTop: '1em' }}>
         <Card className={classes.card} elevation={0}>
           <CardHeader
             avatar={<CircularProgress />}
-            title="Waiting MetaMask Transaction Confirmation"
-            subheader="Please confirm your transaction in MetaMask. If you wish to cancel, click the &quot;Reject&quot; button in MetaMask."
+            title={t.title}
+            subheader={t.description}
           />
         </Card>
       </div>
@@ -92,6 +94,7 @@ MetaMaskTransactionSigner.propTypes = {
   txData: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   logTxn: PropTypes.object,
+  translations: PropTypes.object.isRequired,
 };
 
 MetaMaskTransactionSigner.defaultProps = {

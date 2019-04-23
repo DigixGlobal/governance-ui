@@ -1,5 +1,4 @@
 import util from 'ethereumjs-util';
-
 import web3Utils from 'web3/lib/utils/utils';
 
 // explicitly export all the web3-utils
@@ -154,4 +153,19 @@ export function parseQuery(qstr) {
     query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
   }
   return query;
+}
+
+export function injectTranslation(translation, toInject) {
+  if (!translation || !toInject) {
+    return null;
+  }
+
+  const keys = Object.keys(toInject);
+  let injected = translation;
+
+  keys.forEach((key) => {
+    injected = injected.replace(`{{${key}}}`, toInject[key]);
+  });
+
+  return injected;
 }
