@@ -9,6 +9,7 @@ export default class TransactionInfo extends Component {
     ui: PropTypes.object,
     txData: PropTypes.object.isRequired,
     logToggleDetails: PropTypes.func,
+    translations: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
@@ -17,12 +18,13 @@ export default class TransactionInfo extends Component {
   }
 
   render() {
-    const { logToggleDetails, ui, txData } = this.props;
+    const { logToggleDetails, ui, txData, translations } = this.props;
 
     const defaultRender = (
       <TransactionInfoTable
         open
         logToggleDetails={logToggleDetails}
+        translations={translations}
         {...{ txData }}
       />
     );
@@ -42,6 +44,7 @@ export default class TransactionInfo extends Component {
         <TransactionUI {...this.props} />
         <TransactionInfoTable
           logToggleDetails={logToggleDetails}
+          translations={translations}
           {...{ txData }}
         />
       </div>

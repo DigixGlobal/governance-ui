@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import Markdown from 'react-markdown';
 import _ from 'lodash';
 import TrezorContainer from '@digix/react-trezor-container';
 import Typography from '@material-ui/core/Typography';
@@ -10,14 +11,15 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
   success: {
-    color: '#4CAF50'
-  }
+    color: '#4CAF50',
+  },
 };
 
-const CANCEL_SIGNING_ERROR = 'Action cancelled by user';
 class TrezorKeystoreTransactionSigner extends Component {
   constructor(props) {
     super(props);
+    this.CANCEL_SIGNING_ERROR = 'Action cancelled by user';
+
     this.handleSign = this.handleSign.bind(this);
     this.state = { signed: false, error: false, signing: false };
     this.renderError = this.renderError.bind(this);
@@ -32,6 +34,8 @@ class TrezorKeystoreTransactionSigner extends Component {
   handleSign({ signTransaction }) {
     const { txData, address, hideTxSigningModal } = this.props;
     const { kdPath } = address;
+    const t = this.props.translations.Trezor;
+
     signTransaction(kdPath, txData, hideTxSigningModal)
       .then(signedTx => {
         this.setState({ signed: true });
@@ -42,18 +46,22 @@ class TrezorKeystoreTransactionSigner extends Component {
           this.setState({ error });
           const { logTxn } = this.props;
           if (logTxn) {
-            logTxn.completeTransaction(false, `Trezor Error - ${error}`);
+            logTxn.completeTransaction(false, `${t.error} - ${error}`);
           }
         }, 100);
       });
   }
+
   renderError() {
     const { error } = this.state;
-    if (error.includes(CANCEL_SIGNING_ERROR)) {
-      this.props.hideTxSigningModal({ error: 'Cancelled Signing' });
+    const t = this.props.translations.common;
+
+    if (error.includes(this.CANCEL_SIGNING_ERROR)) {
+      this.props.hideTxSigningModal({ error: t.cancelled });
       return null;
     }
-    return <Typography color="error">{`Trezor Error - ${error}`}</Typography>;
+
+    return <Typography color="error">{`${t.error} - ${error}`}</Typography>;
   }
 
   renderInitSigning = () => {
@@ -67,20 +75,16 @@ class TrezorKeystoreTransactionSigner extends Component {
       margin: '0 auto'
     };
 
+    const t = this.props.translations.common;
     return (
       <Fragment>
-        <p>
-          You can modify the transaction details using the <b>Advanced</b> tab
-          below. Once you are satisfied with the details, please click{' '}
-          <b>Sign Transaction</b>
-          to confirm the transaction with your Trezor device.
-        </p>
+        <Markdown source={t.modifyInstructions} escapeHtml={false} />
         <Button
           variant="outlined"
           onClick={handleInitiateSigning}
           style={buttonStyle}
         >
-          Sign Transaction
+          {t.sign}
         </Button>
       </Fragment>
     );
@@ -90,9 +94,12 @@ class TrezorKeystoreTransactionSigner extends Component {
     const { kdPath, address } = this.props.address;
     const { classes } = this.props;
     const { error, signed, signing } = this.state;
+    const t = this.props.translations.Trezor;
+
     if (error) {
       return this.renderError();
     }
+
     return (
       <TrezorContainer
         expect={{ kdPath, address }}
@@ -110,14 +117,14 @@ class TrezorKeystoreTransactionSigner extends Component {
               align="center"
               className={classes.success}
             >
-              Ready to Sign Transaction
+              {t.ready}
             </Typography>
             <Typography
               variant="body2"
               align="center"
               className={classes.success}
             >
-              Please follow instructions on your Trezor Wallet
+              {t.instructions}
             </Typography>
           </Fragment>
         )}
@@ -131,11 +138,12 @@ TrezorKeystoreTransactionSigner.propTypes = {
   address: PropTypes.object.isRequired,
   txData: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  logTxn: PropTypes.object
+  logTxn: PropTypes.object,
+  translations: PropTypes.object.isRequired,
 };
 
 TrezorKeystoreTransactionSigner.defaultProps = {
-  logTxn: undefined
+  logTxn: undefined,
 };
 
 export default withStyles(styles)(TrezorKeystoreTransactionSigner);
