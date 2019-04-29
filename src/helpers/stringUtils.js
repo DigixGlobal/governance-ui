@@ -1,5 +1,8 @@
+import React from 'react';
 import util from 'ethereumjs-util';
 import web3Utils from 'web3/lib/utils/utils';
+import Markdown from 'react-markdown';
+import { renderToString } from 'react-dom/server';
 
 // explicitly export all the web3-utils
 export const padLeft = web3Utils.padLeft;
@@ -155,7 +158,7 @@ export function parseQuery(qstr) {
   return query;
 }
 
-export function injectTranslation(translation, toInject) {
+export const injectTranslation = (translation, toInject) => {
   if (!translation || !toInject) {
     return null;
   }
@@ -167,5 +170,11 @@ export function injectTranslation(translation, toInject) {
     injected = injected.replace(`{{${key}}}`, toInject[key]);
   });
 
-  return injected;
-}
+  return <Markdown source={injected} escapeHtml={false} />;
+};
+
+export const isVersionOutdated = (currentVersion, latestVersion) => {
+  const semver = currentVersion.split('.');
+  const latestSemver = latestVersion.split('.');
+  return Number(semver[0]) < latestSemver[0] || Number(semver[1]) < latestSemver[1] || Number(semver[2]) < latestSemver[2];
+};

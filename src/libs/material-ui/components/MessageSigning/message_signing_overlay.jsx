@@ -18,6 +18,7 @@ import {
 import web3Connect from '~/helpers/web3/connect';
 import { hideMsgSigningModal } from '~/actions/session';
 import { DialogContent } from '@material-ui/core';
+import { injectTranslation } from '@digix/spectrum/src/helpers/stringUtils';
 
 const defaultState = {
   loading: false,
