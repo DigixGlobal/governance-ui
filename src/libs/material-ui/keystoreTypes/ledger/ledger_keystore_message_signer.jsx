@@ -9,13 +9,22 @@ export default class LedgerKeystoreMessageSigner extends Component {
     super(props);
     this.handleSign = this.handleSign.bind(this);
   }
+
   handleSign({ signMessage }) {
     const { txData, address, hideMsgSigningModal } = this.props;
     const { kdPath } = address;
-    signMessage(kdPath, txData.message).then((signedTx) => {
-      hideMsgSigningModal({ signedTx });
-    });
+    const log = this.props.txData.logSignMessage.txn;
+
+    signMessage(kdPath, txData.message)
+      .then((signedTx) => {
+        log.completeTransaction(true);
+        hideMsgSigningModal({ signedTx });
+      })
+      .catch((error) => {
+        log.completeTransaction(false, error);
+      });
   }
+
   render() {
     const { kdPath, address } = this.props.address;
     const t = this.props.txData.translations.Ledger.chooseAddress.proofOfControl;

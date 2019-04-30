@@ -85,11 +85,13 @@ class ImportKeystore extends Component {
       error: undefined,
       unlockFunc: () => null,
     };
+
     this.handleGotPrivateKey = this.handleGotPrivateKey.bind(this);
     this.handleReset = this.handleReset.bind(this);
     this.handleSetError = this.handleSetError.bind(this);
     this.handleSetLoading = this.handleSetLoading.bind(this);
     this.mounted = false;
+    this.TYPE = 'json';
   }
 
   componentDidMount() {
@@ -130,6 +132,9 @@ class ImportKeystore extends Component {
   }
 
   handleCancel(func) {
+    const { logLoadWallet } = this.props;
+    logLoadWallet.cancel(this.TYPE);
+
     if (func) {
       func();
     }
@@ -139,6 +144,8 @@ class ImportKeystore extends Component {
 
   renderUnlocked() {
     const { privateKey, password, name } = this.state;
+    const { logLoadWallet } = this.props;
+
     return (
       <KeystoreModal
         initiallyOpen
@@ -159,12 +166,13 @@ class ImportKeystore extends Component {
         submitFunc={this.props.createKeystore}
         form={KeystoreCreationForm}
         trigger={this.props.trigger}
+        logLoadWallet={logLoadWallet}
       />
     );
   }
 
   renderImport() {
-    const { classes } = this.props;
+    const { classes, logLoadWallet } = this.props;
     const { address, loading, error, unlockFunc, privateKey } = this.state;
     const t = this.props.translations;
     const tCommon = this.props.commonTranslations;
@@ -172,6 +180,7 @@ class ImportKeystore extends Component {
     return (
       <Dialog
         trigger={this.props.trigger}
+        onEnter={() => logLoadWallet.selectWalletType(this.TYPE)}
         className={classes.noMinHeight}
         contentClasses={{
           root: classes.dialogContent,
@@ -241,6 +250,7 @@ ImportKeystore.propTypes = {
   onReset: PropTypes.func,
   translations: PropTypes.object.isRequired,
   commonTranslations: PropTypes.object.isRequired,
+  logLoadWallet: PropTypes.object,
 };
 
 ImportKeystore.defaultProps = {
@@ -248,7 +258,9 @@ ImportKeystore.defaultProps = {
 };
 
 ImportKeystore.defaultProps = {
+  logLoadWallet: {},
   skipConfirmation: false,
   updateDefaultAddress: undefined,
 };
+
 export default withStyles(styles)(ImportKeystore);
