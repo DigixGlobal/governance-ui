@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import LedgerContainer from '@digix/react-ledger-container';
 import { Message } from 'semantic-ui-react';
-import { injectTranslation } from '../.../..//../../../helpers/stringUtils';
+import { injectTranslation } from '~/helpers/stringUtils';
 
 export default class LedgerKeystoreMessageSigner extends Component {
   constructor(props) {
