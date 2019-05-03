@@ -62,7 +62,7 @@ class TxVisualisation extends Component {
                   {data}
                 </a>
               ) : (
-                <span style={{ color: 'black' }}>{data}</span>
+                <div style={{ color: 'black' }}>{data}</div>
               )}
             </Typography>
           </CardContent>
