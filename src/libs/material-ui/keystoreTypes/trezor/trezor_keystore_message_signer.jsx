@@ -16,22 +16,22 @@ export default class TrezorKeystoreMessageSigner extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return !_.isEqual(nextState, this.state);
   }
+
   handleSign({ signMessage }) {
+    const log = this.props.txData.logSignMessage.txn;
     const { txData, address, hideMsgSigningModal } = this.props;
     const { kdPath } = address;
 
     signMessage(kdPath, txData.message)
-      .then(signedTx => {
+      .then((signedTx) => {
+        log.completeTransaction(true);
         this.setState({ signed: true });
         hideMsgSigningModal({ signedTx });
       })
-      .catch(error => {
+      .catch((error) => {
         setTimeout(() => {
           this.setState({ error });
-          const { logTxn } = this.props;
-          if (logTxn) {
-            logTxn.completeTransaction(false, `Trezor Error - ${error}`);
-          }
+          log.completeTransaction(false, error);
         }, 100);
       });
   }
@@ -72,8 +72,9 @@ export default class TrezorKeystoreMessageSigner extends Component {
   }
 }
 
+const { array, func, object, oneOfType } = PropTypes;
 TrezorKeystoreMessageSigner.propTypes = {
-  hideMsgSigningModal: PropTypes.func.isRequired,
-  address: PropTypes.object.isRequired,
-  txData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired
+  address: object.isRequired,
+  hideMsgSigningModal: func.isRequired,
+  txData: oneOfType([array, object]).isRequired,
 };

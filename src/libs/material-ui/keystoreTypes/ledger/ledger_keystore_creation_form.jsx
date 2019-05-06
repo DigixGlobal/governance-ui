@@ -14,10 +14,12 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import LedgerOutdatedVersionError from '~/libs/material-ui/keystoreTypes/ledger/version_outdated';
 import { withStyles } from '@material-ui/core/styles';
+import { isVersionOutdated } from '~/helpers/stringUtils';
+import { LATEST_ETHEREUM_APP_LEDGER } from '~/helpers/constants';
 
 import EnhancedTableToolbar from '~/libs/material-ui/components/common/EnhancedToolbar';
-
 import LedgerAddressList from './ledger_keystore_address_list';
 import LedgerKeystoreAddressItem from './ledger_keystore_address_item';
 
@@ -177,8 +179,25 @@ class LedgerKeystoreCreationForm extends Component {
     return options;
   }
 
-  render() {
+  renderReady(props) {
+    const isAppOutdated = isVersionOutdated(props.config.version, LATEST_ETHEREUM_APP_LEDGER);
+    if (isAppOutdated) {
+      const t = this.props.translations.chooseAddress;
+      return <LedgerOutdatedVersionError translations={t} />;
+    }
+
     const { renderContainer, renderItem } = this;
+    const { hdPath, customPath: custom, useCustom } = this.state;
+    return (
+      <LedgerAddressList
+        kdPath={!useCustom ? hdPath : custom}
+        {...props}
+        {...{ renderContainer, renderItem }}
+      />
+    );
+  }
+
+  render() {
     const { hdPath, customPath: custom, error, loading, useCustom } = this.state;
     const { classes } = this.props;
     const t = this.props.translations.chooseAddress.selectPath;
@@ -221,9 +240,7 @@ class LedgerKeystoreCreationForm extends Component {
           <Typography color="error" component="div">
             <LedgerContainer
               expect={!useCustom ? { kdPath: hdPath } : custom}
-              renderReady={props => (
-                <LedgerAddressList kdPath={!useCustom ? hdPath : custom} {...props} {...{ renderContainer, renderItem }} />
-              )}
+              renderReady={props => this.renderReady(props)}
             />
           </Typography>
         )}
