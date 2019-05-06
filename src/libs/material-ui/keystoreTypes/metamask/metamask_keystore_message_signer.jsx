@@ -3,20 +3,22 @@ import PropTypes from 'prop-types';
 import { Message, Icon } from 'semantic-ui-react';
 
 import ErrorMessage from '~/libs/material-ui/components/common/error_message';
+import MetamaskSignMsg from './metamask_sign_tx';
 
-import { v3SignMsg } from './metamask_sign_tx';
-
-export default class V3KestoreMessageSigner extends Component {
+export default class MetamaskKeystoreMessageSigner extends Component {
   constructor(props) {
     super(props);
     this.state = { error: false };
   }
 
   componentDidMount() {
+    const log = this.props.txData.logSignMessage.txn;
     const throwErr = (error) => {
+      log.completeTransaction(false, error);
       this.props.setLoading(false);
       this.setState({ error });
     };
+
     try {
       const {
         address: { address },
@@ -24,8 +26,11 @@ export default class V3KestoreMessageSigner extends Component {
       } = this.props;
       const { password } = this.state;
 
-      v3SignMsg({ txData, address, password })
-        .then(this.props.hideMsgSigningModal)
+      MetamaskSignMsg({ txData, address, password })
+        .then((data) => {
+          log.completeTransaction(true);
+          this.props.hideMsgSigningModal(data);
+        })
         .catch(throwErr);
     } catch (error) {
       throwErr(error);
@@ -51,7 +56,7 @@ export default class V3KestoreMessageSigner extends Component {
   }
 }
 
-V3KestoreMessageSigner.propTypes = {
+MetamaskKeystoreMessageSigner.propTypes = {
   setLoading: PropTypes.func.isRequired,
   hideMsgSigningModal: PropTypes.func.isRequired,
   address: PropTypes.object.isRequired,

@@ -4,10 +4,12 @@ import Markdown from 'react-markdown';
 
 import Fingerprint from '@material-ui/icons/Fingerprint';
 import LedgerContainer from '@digix/react-ledger-container';
+import LedgerOutdatedVersionError from '~/libs/material-ui/keystoreTypes/ledger/version_outdated';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { injectTranslation } from '../../../../helpers/stringUtils';
 import { withStyles } from '@material-ui/core/styles';
+import { injectTranslation, isVersionOutdated } from '~/helpers/stringUtils';
+import { LATEST_ETHEREUM_APP_LEDGER } from '~/helpers/constants';
 
 const styles = {
   success: {
@@ -16,6 +18,7 @@ const styles = {
 };
 
 const CANCEL_SIGNING_ERROR = '6985';
+const SETTINGS_ERROR = '6a80';
 
 class LedgerKeystoreTransactionSigner extends Component {
   constructor(props) {
@@ -47,18 +50,29 @@ class LedgerKeystoreTransactionSigner extends Component {
 
   renderError() {
     const { error } = this.state;
-    const t = this.props.translations.common;
+    let message = `Ledger Error - ${error}`;
 
     if (error.includes(CANCEL_SIGNING_ERROR)) {
+      const t = this.props.translations.common;
       this.props.hideTxSigningModal({ error: t.cancelled });
       return null;
     }
 
-    return <Typography color="error">{`Ledger Error - ${error}`}</Typography>;
+    if (error.includes(SETTINGS_ERROR)) {
+      const errorMessage = this.props.translations.Ledger.errors.settingsError;
+      message = <Markdown source={errorMessage} escapeHtml={false} />;
+    }
+
+    return <Typography color="error">{message}</Typography>;
   }
 
   renderReady = ({ config }) => {
     const t = this.props.translations.Ledger;
+    const isAppOutdated = isVersionOutdated(config.version, LATEST_ETHEREUM_APP_LEDGER);
+    if (isAppOutdated) {
+      return <LedgerOutdatedVersionError translations={t} />;
+    }
+
     const { success } = this.props.classes;
     const { eip155, version } = config;
     const protectionStatus = eip155 ? 'enabled' : 'disabled';
