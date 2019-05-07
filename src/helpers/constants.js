@@ -272,3 +272,5 @@ export const THEME_SELECTOR = [
   { MaterialUI: 'material-ui' },
   { SemanticUi: 'semantic-ui' },
 ];
+
+export const LATEST_ETHEREUM_APP_LEDGER = '1.2.4';

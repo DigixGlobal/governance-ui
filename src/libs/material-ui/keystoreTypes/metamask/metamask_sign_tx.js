@@ -1,12 +1,11 @@
-
 import util from 'ethereumjs-util';
 
-export const v3SignMsg = ({ txData, address }) =>
-  new Promise((resolve) => {
+const MetamaskSignMsg = ({ txData, address }) =>
+  new Promise((resolve, reject) => {
     if (window.web3.eth.accounts[0] !== address) {
       const error = `Address: ${address} is not the current active address in MetaMask.
         Go to MetaMask and change to that address in order to proceed.`;
-      resolve({ error });
+      reject(error);
     }
 
     const msgBuffer = new Buffer(txData.message);
@@ -14,9 +13,15 @@ export const v3SignMsg = ({ txData, address }) =>
     const prefixedMsg = util.sha3(Buffer.concat([prefix, new Buffer(String(msgBuffer.length)), msgBuffer]));
     const msgHash = util.addHexPrefix(prefixedMsg.toString('hex'));
 
-    window.web3.eth.sign(address, msgHash, (error, signedTx) => {
-      if (error) resolve({ error });
+    const throwErr = (error, signedTx) => {
+      if (error) {
+        reject('Transaction rejected.');
+      }
+
       resolve({ signedTx });
-    });
+    };
+
+    window.web3.eth.sign(address, msgHash, throwErr);
   });
 
+export default MetamaskSignMsg;

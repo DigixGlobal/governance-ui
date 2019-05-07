@@ -353,7 +353,9 @@ class TransactionSigningOverlay extends Component {
         disableEscapeKeyDown
         fullWidth
       >
-        <DialogTitle id="alert-dialog-title">{t.title}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <span>{t.title}</span>
+        </DialogTitle>
         <DialogContent>
           <Grid container spacing={16} direction="column">
             <Grid item xs={12}>
