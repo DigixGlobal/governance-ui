@@ -1,60 +1,26 @@
-# Spectrum (Digix POP, Marketplace, KYC-UI)
+# Spectrum (Digix DAO)
 
 ### Pre-requisites
 
-* POP-UI = clone [POP-UI](https://github.com/DigixGlobal/poa-ui/tree/deploy-production) `deploy-production` branch, run `npm i`. See README for details
-* Marketplace-UI = clone [Marketplace-UI](https://github.com/DigixGlobal/marketplace-ui/tree/deploy-production) `deploy-production` branch, run `npm i`. See README for details
-* KYC-UI = clone [KYC-UI](https://github.com/DigixGlobal/kyc-ui/tree/deploy-production) `deploy-production` branch, run `npm i`. See README for details
-* Main Net = clone [Core](https://github.com/DigixGlobal/core2) Master branch, run `npmi i`. See README for details.
+- dao-contracts = clone [dao-contracts](https://github.com/DigixGlobal/dao-contracts). See project README for details
+- dao-server = clone [dao-server](https://github.com/DigixGlobal/dao-server). See project README for details
+- info-server = clone [info-server](https://github.com/DigixGlobal/info-servern). See project README for details
+- governance-ui-components = clone [governance-ui-components](https://github.com/DigixGlobal/governance-ui-components). See project README for details.
 
-### Spectrum Config
+## Setup
 
-See `spectrum.config.js`. Make sure that networks are set to `eth-mainnet`.
+- Run `npm i`
 
-For specific builds (including a standalone dapplet), you can customise the config file with the following options:
+## Running the app
 
-````
-#### Main Net
-
-``` javascript
-module.exports = {
-  publicPath: '/identity',
-  appTitle: 'Digix Marketplace',
-  menuStyle: 'hamburger',
-  keystoreTypes: ['v3', 'ledger'],
-  defaultNetworks: ['eth-mainnet'],
-  enabledNetworks: ['eth-mainnet'],
-  availableNetworks: ['eth-mainnet'],
-  persistCore: false,
-  // themeFolder: '@digix/sui-theme/semantic-ui',
-  dappletName: 'Digix Marketplace',
-  dappletIcon: 'cubes',
-  dappletPath: '/kyc',
-};
-````
-
-## IPFS Config
-
-* Spectrum IPFS Config = refer to `/src/config/ipfs.production.config.js` and verify the setting
-
-```javascript
-module.exports = {
-  GATEWAY: 'https://ipfs.digix.global/ipfs',
-  ENDPOINT: 'https://ipfs-api.digix.global',
-  CONFIG: { host: 'ipfs.digix.global', protocol: 'https' }
-};
-```
+- Run `npm start` for local development
 
 ## Deployment Scripts
 
 See `package.json` for scripts:
 
-* `npm run build` Build static files to `./dist/production`
-* fonts = Receipt Stitcher (using Jimp) requires bitmap fonts, these fonts need to be copied over. Need to run `cp -pr fonts ./dist/production/fonts`
-
-## TODO:
-
-Have the production build copied over to the main-site to automate the updates.
+- Production build = `npm run build` Build static files to `./dist/production`
+- Kovan build = `npm run build:kovan` Build static files to `./dist/kovan`
 
 ## License
 
