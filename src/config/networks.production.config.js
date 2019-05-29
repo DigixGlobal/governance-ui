@@ -17,7 +17,7 @@ module.exports = [
     name: 'Ethereum',
     symbol: 'ETH',
     description: 'Official Ethereum Mainnet',
-    provider: 'https://mainnet.infura.io/OtIiCFXWXH3d2eeIFQhK',
+    provider: 'https://mainnet.infura.io/v3/d356a5affcea4eec8e0cdde7e52570ba',
     id: 'eth-mainnet',
     color: 'violet',
     chainId: 1,
