@@ -7,7 +7,7 @@ const testRpcToken = getContract('dgd', DEFAULT_NETWORKS, 'testrpc');
 
 module.exports = [
   {
-    address: '0x693df01689a820ff7f907672ce7973d412c84419',
+    address: '0xcb010731f19680a4559445d7d8694d729e95d6f0',
     symbol: 'DGX',
     default: true,
     decimals: 9,
@@ -25,7 +25,7 @@ module.exports = [
     color: 'blue',
   },
   {
-    address: '0xc2179bba7d9515417c56638a7b1f208f23b13d23',
+    address: '0x1ed8364eaabf655882dca0c01b19519f8acaed0b',
     symbol: 'DGDb',
     default: true,
     decimals: 9,
