@@ -52,3 +52,4 @@ errorShots
 .cache-loader
 dist/kovan
 dist/rinkeby
+.env.*

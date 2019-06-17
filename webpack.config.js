@@ -10,7 +10,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const spectrumConfig = require('./spectrum.config.js');
 // if process.env.ENVIRONMENT is set, always use `production` flag, but pass the ENVIRONMENT, too.
 const environment = process.env.ENVIRONMENT; // could be 'production', 'staging' or null.
-const devEnvironment = 'development'; // could be 'production', 'staging' or null.
+const devEnvironment = process.env.DEV_ENVIRONMENT; // could be 'production', 'staging' or null.
 
 const production = !!environment; // if this is truthy (i.e. set, then we're good)
 
