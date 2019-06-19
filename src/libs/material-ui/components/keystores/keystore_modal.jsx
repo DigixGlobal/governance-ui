@@ -8,7 +8,7 @@ import {
   getKeystoreTypes,
   getNetworksWithTokens,
   getDefaultNetworks,
-  getKeystores,
+  getKeystores
 } from '~/selectors';
 
 import config from '~/../spectrum.config';
@@ -29,33 +29,33 @@ const styles = theme => ({
   walletIcon: {
     height: '60px',
     width: '100%',
-    color: theme.palette.secondary.main,
+    color: theme.palette.secondary.main
   },
   root: {
     display: 'flex',
     alignItems: 'center',
-    width: '100%',
+    width: '100%'
   },
   wrapper: {
     position: 'relative',
-    margin: '0 auto',
+    margin: '0 auto'
   },
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing.unit
   },
   label: {
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.main
   },
   noMinHeight: {
-    minHeight: 'none',
-  },
+    minHeight: 'none'
+  }
 });
 
 const icons = {
   metamask: MetamaskIcon,
   trezor: TrezorIcon,
   ledger: LedgerIcon,
-  imtoken: ImtokenIcon,
+  imtoken: ImtokenIcon
 };
 
 class KeystoreModal extends Component {
@@ -83,7 +83,7 @@ class KeystoreModal extends Component {
     showBalances: PropTypes.bool,
     translations: PropTypes.object,
     commonTranslations: PropTypes.object,
-    logLoadWallet: PropTypes.object,
+    logLoadWallet: PropTypes.object
   };
 
   static defaultProps = {
@@ -103,7 +103,7 @@ class KeystoreModal extends Component {
     showBalances: false,
     translations: undefined,
     commonTranslations: undefined,
-    logLoadWallet: {},
+    logLoadWallet: {}
   };
   constructor(props) {
     super(props);
@@ -135,9 +135,13 @@ class KeystoreModal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { keystores } = nextProps;
+    const { keystores, skipConfirmation, keystoreType } = nextProps;
     const { keystores: oldStores = [] } = this.props;
     const { createdAccount } = this.state;
+
+    if (skipConfirmation && !createdAccount && keystoreType === 'metamask') {
+      this.enableMetamask();
+    }
 
     let newStore;
     if (this.props.keystores !== nextProps.keystores && createdAccount) {
@@ -183,7 +187,7 @@ class KeystoreModal extends Component {
   }
 
   downloadKeystore(keystore) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const { data, addresses } = keystore;
       const parsed = JSON.parse(data);
       const { address } = parsed;
@@ -206,7 +210,7 @@ class KeystoreModal extends Component {
 
     // it's async, lets show some loading UI
     return new Promise((resolve, reject) => {
-      const throwErr = (error) => {
+      const throwErr = error => {
         logLoadWallet.loadError(error);
         this.setState({ loading: false, error });
         return reject();
@@ -222,7 +226,7 @@ class KeystoreModal extends Component {
           }
 
           func = this.props.submitFunc(newFormData || { ...this.state.data }, {
-            ...this.state.data,
+            ...this.state.data
           });
         } catch (error) {
           throwErr(error);
@@ -285,8 +289,7 @@ class KeystoreModal extends Component {
     this.handleClose();
   }
 
-  enableMetamask = (e) => {
-    e.preventDefault();
+  enableMetamask = () => {
     const t = this.props.translations.Name.ConnectionError;
 
     if (!window.ethereum) {
@@ -299,7 +302,10 @@ class KeystoreModal extends Component {
     window.ethereum
       .enable()
       .then(() => {
-        this.handleSubmit();
+        this.handleSubmit({
+          ...this.getDefaultData(),
+          name: 'Metamask Keystore'
+        });
       })
       .catch(() => {
         const { logLoadWallet } = this.props;
@@ -308,7 +314,7 @@ class KeystoreModal extends Component {
       });
   };
 
-  enableOtherWallets = (e) => {
+  enableOtherWallets = e => {
     e.preventDefault();
     this.handleSubmit();
   };
@@ -326,7 +332,7 @@ class KeystoreModal extends Component {
       data: { type },
       skipConfirmation,
       keystoreType,
-      logLoadWallet,
+      logLoadWallet
     } = this.props;
 
     if (skipConfirmation) {
@@ -336,16 +342,19 @@ class KeystoreModal extends Component {
     const keystoreTypes = !config.keystoreTypes
       ? rawKeystores
       : rawKeystores.filter(({ id }) => {
-        if (this.props.allowedKeystoreTypes) {
-          return this.props.allowedKeystoreTypes.indexOf(id) > -1;
-        }
-        return config.keystoreTypes.indexOf(id) > -1;
-      });
+          if (this.props.allowedKeystoreTypes) {
+            return this.props.allowedKeystoreTypes.indexOf(id) > -1;
+          }
+          return config.keystoreTypes.indexOf(id) > -1;
+        });
 
     const Icon = icons[type];
     const t = this.props.translations;
     const tCommon = this.props.commonTranslations;
-    const title = this.state.data.type === 'metamask' ? t.Name.title : t.chooseAddress.title;
+    const title =
+      this.state.data.type === 'metamask'
+        ? t.Name.title
+        : t.chooseAddress.title;
 
     return (
       <Dialog
@@ -373,7 +382,9 @@ class KeystoreModal extends Component {
 
           return (
             <div>
-              <Button onClick={() => this.handleCancel(hide)}>{tCommon.cancel}</Button>
+              <Button onClick={() => this.handleCancel(hide)}>
+                {tCommon.cancel}
+              </Button>
               {showLoadButton && (
                 <Button
                   color="primary"
@@ -409,7 +420,7 @@ class KeystoreModal extends Component {
                 hideSelector,
                 trezor,
                 onSuccess,
-                showBalances,
+                showBalances
               }}
             />
             {this.state.error && (
@@ -428,7 +439,7 @@ const mapStateToProps = state => ({
   keystoreTypes: getKeystoreTypes(state),
   networks: getNetworksWithTokens(state),
   defaultNetworks: getDefaultNetworks(state),
-  keystores: getKeystores(state),
+  keystores: getKeystores(state)
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(KeystoreModal));
