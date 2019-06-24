@@ -1,13 +1,9 @@
-// import { THEME_SELECTOR } from '~/helpers/contstants';
 
-// const digix = require('./src/themes/material-ui/digix');
 
 const NETWORKS =
   (process.env.ENVIRONMENT === 'production' && 'eth-mainnet') ||
   (process.env.ENVIRONMENT === 'kovan' && 'eth-kovan') ||
   'testrpc';
-
-// const env = process.env.ENVIRONMENT === 'production' ? 'eth-mainnet' : 'eth-kovan';
 
 module.exports = {
   publicPath: '/',
@@ -18,8 +14,7 @@ module.exports = {
   enabledNetworks: [NETWORKS],
   availableNetworks: [NETWORKS],
   persistCore: false,
-  // themeFolder: '@digix/sui-theme/semantic-ui',
-  dappletName: 'Digix Carbon Voting',
+  dappletName: 'DAO Governance',
   dappletIcon: 'cubes',
   dappletPath: '/',
   uiLibrary: {

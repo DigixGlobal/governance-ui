@@ -55,7 +55,7 @@
   ],
   "dependencies": {
     "@digix/governance-ui-components": "file:../governance-ui-components",
-    "@digix/mui": "file:../react-material-ui-suite",
+    "@digix/mui": "^1.0.0",
     "@digix/react-ledger-container": "0.1.8",
     "@digix/react-trezor-container": "^1.1.9",
     "@digix/redux-crypto-prices": "0.0.1",
