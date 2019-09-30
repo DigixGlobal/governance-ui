@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import Markdown from 'react-markdown';
 
 const styles = () => ({
   card: {
@@ -23,15 +25,18 @@ class MetaMaskTransactionSigner extends Component {
     super(props);
     this.state = {
       error: false,
+      isSigning: false,
     };
+
+    this.renderInitSigning = this.renderInitSigning.bind(this);
+    this.renderLoading = this.renderLoading.bind(this);
+    this.initiateSigning = this.initiateSigning.bind(this);
   }
 
-  componentDidMount() {
-    this.props.hideAdvancedTab();
-
+  initiateSigning() {
     const throwErr = (error) => {
       this.props.setLoading(false);
-      this.setState({ error });
+      this.setState({ error, isSigning: false });
       const { logTxn } = this.props;
       if (logTxn) {
         logTxn.completeTransaction(false, error);
@@ -58,6 +63,7 @@ class MetaMaskTransactionSigner extends Component {
           }
           this.props.hideTxSigningModal({ error: ERROR_MESSAGES.shouldBeInRpc });
         } else {
+          this.setState({ isSigning: true });
           window.web3.eth.sendTransaction(txData, (sendTransactionError, txHash) => {
             const result = sendTransactionError ? { error: sendTransactionError } : txHash;
             this.props.hideTxSigningModal(result);
@@ -69,19 +75,47 @@ class MetaMaskTransactionSigner extends Component {
     }
   }
 
-  render() {
+  renderInitSigning = () => {
+    const handleInitiateSigning = () => {
+      this.props.hideAdvancedTab();
+      this.initiateSigning();
+    };
+
+    const buttonStyle = {
+      display: 'block',
+      margin: '0 auto',
+    };
+
+    const t = this.props.translations.common;
+    return (
+      <Fragment>
+        <Markdown source={t.modifyInstructions} escapeHtml={false} />
+        <Button variant="outlined" onClick={handleInitiateSigning} style={buttonStyle}>
+          {t.sign}
+        </Button>
+      </Fragment>
+    );
+  };
+
+  renderLoading = () => {
     const { classes } = this.props;
     const t = this.props.translations.Metamask;
 
     return (
+      <Card className={classes.card} elevation={0}>
+        <CardHeader
+          avatar={<CircularProgress />}
+          title={t.title}
+          subheader={t.description}
+        />
+      </Card>
+    );
+  };
+
+  render() {
+    return (
       <div style={{ marginTop: '1em' }}>
-        <Card className={classes.card} elevation={0}>
-          <CardHeader
-            avatar={<CircularProgress />}
-            title={t.title}
-            subheader={t.description}
-          />
-        </Card>
+        {this.state.isSigning ? this.renderLoading() : this.renderInitSigning()}
       </div>
     );
   }
