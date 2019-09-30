@@ -50,6 +50,5 @@ todo.txt
 stats.json
 errorShots
 .cache-loader
-dist/kovan
 dist/rinkeby
 .env.*
