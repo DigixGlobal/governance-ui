@@ -19,7 +19,7 @@
     "test:cucumber:ci": "echo 'Skipping Seleneium Tests'; # TODO: ./node_modules/.bin/wdio wdio.ci.config.js",
     "start": "webpack-dev-server --progress --https",
     "start:kovan": "DEV_ENVIRONMENT=kovan webpack-dev-server --progress --https",
-    "start:production": "DEV_ENVIRONMENT=production webpack-dev-server --progress --https",
+    "start:production": "DEV_ENVIRONMENT=production ENVIRONMENT=production webpack-dev-server --progress --https",
     "build:stats": "rm -rf ./dist/production; STATS=true ENVIRONMENT=production webpack --progress --profile; npm run stats;",
     "stats": "webpack-bundle-analyzer ./dist/stats.json ./dist/production;",
     "build:demo": "rm -rf ./dist/demo; ENVIRONMENT=demo webpack --progress",
