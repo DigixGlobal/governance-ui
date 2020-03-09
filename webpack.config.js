@@ -169,7 +169,9 @@ const baseConfig = {
   }
 };
 
-const envConfig = require('./webpack.development.config');
+const envConfig = devEnvironment
+  ? require('./webpack.development.config')
+  : require('./webpack.production.config.js');
 
 const config = Object.assign(baseConfig, envConfig(baseConfig));
 
