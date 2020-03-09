@@ -140,7 +140,7 @@ const baseConfig = {
     new webpack.DefinePlugin({
       'process.env': {
         ENVIRONMENT: JSON.stringify(
-          environment || devEnvironment || 'development'
+          environment || 'development'
         ), // staging / production / development
         NODE_ENV: JSON.stringify(production ? 'production' : 'development') // for react
       }
@@ -169,9 +169,7 @@ const baseConfig = {
   }
 };
 
-const envConfig = production
-  ? require('./webpack.production.config.js')
-  : require('./webpack.development.config');
+const envConfig = require('./webpack.development.config');
 
 const config = Object.assign(baseConfig, envConfig(baseConfig));
 
