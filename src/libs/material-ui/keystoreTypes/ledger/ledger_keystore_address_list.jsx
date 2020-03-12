@@ -71,7 +71,9 @@ class LedgerAddressList extends Component {
                     resolve(address);
                   })
                   /* eslint-disable no-console */
-                  .fail(console.error)
+                  .catch((err) => {
+                    console.log(err);
+                  })
               );
               /* eslint-enable no-console */
             }),
