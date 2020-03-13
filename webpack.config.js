@@ -147,7 +147,7 @@ const baseConfig = {
     })
   ],
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.json'],
     modules: [
       path.join(__dirname, 'node_modules'),
       'node_modules' // remove when we're not using linked modules
