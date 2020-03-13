@@ -17,7 +17,7 @@ module.exports = [
     name: 'Kovan',
     symbol: 'KETH',
     description: 'Kovan PoA Testnet',
-    provider: 'https://kovan.infura.io/',
+    provider: 'https://kovan.infura.io/v3/d356a5affcea4eec8e0cdde7e52570ba',
     id: 'eth-kovan',
     color: 'pink',
     enabled: true,
