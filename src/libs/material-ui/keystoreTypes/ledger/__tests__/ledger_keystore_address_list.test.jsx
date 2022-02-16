@@ -9,7 +9,7 @@ const config = {
 };
 
 const ethLedger = {
-  getAddress_async: () => jest.fn,
+  getAddress: () => jest.fn,
 };
 
 describe('<LedgerKeystoreAddressList />', () => {
