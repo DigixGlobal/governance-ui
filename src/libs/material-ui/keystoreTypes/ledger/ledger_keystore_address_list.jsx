@@ -65,7 +65,7 @@ class LedgerAddressList extends Component {
               }
               return (
                 this.props.ethLedger
-                  .getAddress_async(kdPath)
+                  .getAddress(kdPath)
                   .then((address) => {
                     this.setState({ items: { ...this.state.items, [kdPath]: { ...address, kdPath, n } } });
                     resolve(address);
